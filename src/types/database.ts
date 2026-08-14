@@ -3,7 +3,7 @@ export interface Set {
     created_at?: string;
     reps:number;
     weight:number;
-    excercise:string;
+    excercise?:string;
     workout_id?:number;
 }
 

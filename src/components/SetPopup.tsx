@@ -12,12 +12,13 @@ export default function SetPopup({children,onAddSet}:SetPopupProps){
     
     const handleSubmit = () => {
         onAddSet(newSet);
+        setSet({reps:0,weight:0})
     };
 
     return(
         <Popover>
             <Popover.Trigger>{children}</Popover.Trigger>
-            <Popover.Content>
+            <Popover.Content placement="right">
             <Card className='Card'>
                 <TextField onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
                 <Label>WEIGHT</Label>

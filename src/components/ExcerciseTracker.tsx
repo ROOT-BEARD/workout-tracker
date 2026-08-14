@@ -10,6 +10,7 @@ interface ExcerciseTrackerProps{
     onRemoveExercise: () => void;
     onRemoveSet: (index: number, setIndex:number) => void;
     onAddset: (index: number, newSet: NewSet) => void;
+    onEditSet: (exerciseIndex:number,setIndex:number,newSet:NewSet) => void;
 };
 
 export default function ExcerciseTracker({
@@ -18,10 +19,12 @@ export default function ExcerciseTracker({
     onAddExercise,
     onRemoveExercise,
     onAddset,
-    onRemoveSet
+    onRemoveSet,
+    onEditSet
     }:ExcerciseTrackerProps)
     {
     const [selectedExcercise, setExcercise] = useState<string>("");
+    const [popoverOpen,setPopoverOpen] = useState<boolean>(false);
 
 
     const handleAdd = () => {
@@ -39,6 +42,7 @@ export default function ExcerciseTracker({
         };
 
         onAddExercise(newExcercise);
+        setPopoverOpen(false);
         setExcercise("");
     }
 
@@ -48,19 +52,27 @@ export default function ExcerciseTracker({
         <ListBoxItemIndicator />
     </ListBoxItem>);
 
+    const testSet:NewSet={
+        weight: 0,
+        reps: 0,
+    };
+
     const addedExercisesList = addedExercises.map((exercise,exerciseIndex) => (
-        <div>
-            <SetPopup onAddSet={(newSet)=>onAddset(exerciseIndex, newSet)}>
-                <Button>{exercise.name}</Button>
-            </SetPopup>
-            
+        <Card>
+            <Card.Header style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
+                <Card.Title>{exercise.name}</Card.Title>
+                <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
+            </Card.Header>
             {exercise.sets.length > 0 
             ?exercise.sets.map((set,index)=>
-                <Card>
+                <Card variant="secondary">
                     <Card.Header style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
                         <div>
                             Set {index + 1}
                         </div>
+                        <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,index,newSet)}>
+                            <Button>Edit</Button>
+                        </SetPopup>
                         <Button onClick={()=>onRemoveSet(exerciseIndex,index)}>Remove</Button>
                     </Card.Header>
                     <Card.Content style={{display:'flex', flexDirection:'row'}}>
@@ -70,7 +82,7 @@ export default function ExcerciseTracker({
                 </Card>
             ):
             <></>}
-        </div>
+        </Card>
     ));
 
     return(
@@ -78,9 +90,11 @@ export default function ExcerciseTracker({
             <div>
                 {addedExercisesList}
                 <Button onClick={onRemoveExercise}>-</Button>
-                <Popover>
-                    <Popover.Trigger><Button>+</Button></Popover.Trigger>
-                    <Popover.Content>
+                <Popover isOpen={popoverOpen} onOpenChange={setPopoverOpen}>
+                    <Popover.Trigger>
+                        <Button>+</Button>
+                    </Popover.Trigger>
+                    <Popover.Content placement="right">
                         <Card>
                             <h1>This is the excercise pop up</h1>
                             <ComboBox inputValue={selectedExcercise}

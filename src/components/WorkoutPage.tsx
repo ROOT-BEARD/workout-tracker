@@ -45,6 +45,22 @@ export default function WorkoutPage(){
         setAddedExercises(prev => prev.slice(0, -1));
     };
 
+    const handleEditSet = (exerciseIndex:number,setIndex:number,newSet:NewSet) => {
+        setAddedExercises(prev =>
+            prev.map((ex,idx) =>{
+                if(idx === exerciseIndex){
+                    const updatedSets = [...ex.sets];
+                    updatedSets[setIndex] = newSet;
+                    return{
+                        ...ex,
+                        sets: updatedSets
+                    };
+                }
+                return ex;
+            })
+        );
+    };
+
     const handleRemoveSet = (exerciseIndex:number,setIndex:number) => {
         setAddedExercises(prev =>
             prev.map((ex,idx) => {
@@ -76,6 +92,7 @@ export default function WorkoutPage(){
             <h1>Date picked: {pickedDate.toString()}</h1>
 
             <ExcerciseTracker
+            onEditSet={handleEditSet}
             onRemoveSet={handleRemoveSet}
             availableExercises={MOCK_EXERCISES}
             addedExercises={addedExercises}

@@ -1,5 +1,4 @@
 import { Calendar} from "@heroui/react";
-import { useState } from "react";
 import type { CalendarDate } from "@internationalized/date";
 
 export default function WorkoutCalender({pickedDate, setDate} : {setDate:(date: CalendarDate)=>void, pickedDate:CalendarDate}){
