@@ -20,5 +20,13 @@ export const setService = {
             .single();
         if(error) console.error("Error adding sets: ", error.message)
         return data;
+    },
+    async getSetsById(id:number): Promise<Set[]>{
+        const {data,error} = await supabase
+        .from("sets")
+        .select("*")
+        .eq('workout_id', id);
+        if(error) console.error("Error fecthing sets for workout", error.message);
+        return data ?? [];
     }
 };
