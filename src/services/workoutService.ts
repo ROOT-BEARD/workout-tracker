@@ -32,7 +32,10 @@ export const workoutService = {
 
         const workoutId = data.id;
 
-        for(let i:number = 0; i < excercises.length; i++){
+
+
+        // nested for loop approach
+        /*for(let i:number = 0; i < excercises.length; i++){
             for(let j:number = 0; j < excercises[i].sets.length; j++){
                 const newSet:NewSet = {
                     excercise:excercises[i].name,
@@ -40,11 +43,39 @@ export const workoutService = {
                     weight:excercises[i].sets[j].weight,
                     workout_id:workoutId
                 };
-                setService.createSet(newSet);
+                await setService.createSet(newSet);
             }
-        }
+        }*/
 
         if(error) console.error("Error adding workout", error.message);
+        return data;
+    },
+    async updateWorkout(updatedWorkout:NewWorkout,updatedExercises:Excercise[],date:CalendarDate): Promise<Workout>{
+        const{data,error} = await supabase
+        .from("workouts")
+        .update(updatedWorkout)
+        .eq('created_at',date)
+        .select('*')
+        .single();
+
+        const flatSets:NewSet[] = updatedExercises.flatMap((excercise)=>
+            excercise.sets.map((set)=> ({
+                excercise: excercise.name,
+                reps: set.reps,
+                weight: set.weight,
+                workout_id: data.id,
+            }))
+        );
+
+        await setService.resetSetsByWorkoutId(data.id);
+
+        if(flatSets.length > 0) {
+            const {error:insertError} = await supabase
+            .from("sets")
+            .insert(flatSets);
+        }
+
+        if(error) console.error("Error updating workout", error.message);
         return data;
     }
 };

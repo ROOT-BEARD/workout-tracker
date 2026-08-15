@@ -1,0 +1,8 @@
+.CollaspableCard{
+    width: 400px;
+}
+
+.CollaspableCard:hover{
+    transform:scale(1.01);
+    outline: auto;
+}

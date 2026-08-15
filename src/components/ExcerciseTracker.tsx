@@ -2,6 +2,8 @@ import { Card, Button, Popover, ComboBox, Input, ListBox, ListBoxItem, ListBoxIt
 import { useState } from "react";
 import type { NewSet, Excercise } from "../types/database";
 import SetPopup from "./SetPopup";
+import "./ExcerciseTracker.css";
+import CollaspableCard from "./CollaspableCard";
 
 interface ExcerciseTrackerProps{
     availableExercises: string[];
@@ -58,14 +60,10 @@ export default function ExcerciseTracker({
     };
 
     const addedExercisesList = addedExercises.map((exercise,exerciseIndex) => (
-        <Card>
-            <Card.Header style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
-                <Card.Title>{exercise.name}</Card.Title>
-                <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
-            </Card.Header>
+        <CollaspableCard title={exercise.name}>
             {exercise.sets.length > 0 
             ?exercise.sets.map((set,index)=>
-                <Card variant="secondary">
+                <Card variant="secondary" className="SetCard">
                     <Card.Header style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
                         <div>
                             Set {index + 1}
@@ -82,7 +80,8 @@ export default function ExcerciseTracker({
                 </Card>
             ):
             <></>}
-        </Card>
+            <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
+        </CollaspableCard>
     ));
 
     return(
@@ -94,7 +93,7 @@ export default function ExcerciseTracker({
                     <Popover.Trigger>
                         <Button>+</Button>
                     </Popover.Trigger>
-                    <Popover.Content placement="right">
+                    <Popover.Content placement="top">
                         <Card>
                             <h1>This is the excercise pop up</h1>
                             <ComboBox inputValue={selectedExcercise}

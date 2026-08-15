@@ -1,0 +1,13 @@
+.ExcerciseCardHeader{
+    display : flex;
+    justify-content : space-between;
+    flex-direction : row;
+}
+
+.ExcerciseCard{
+    width: 100%;
+}
+
+.SetCard{
+    width: 350px;
+}

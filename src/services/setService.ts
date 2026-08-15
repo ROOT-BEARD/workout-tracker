@@ -28,5 +28,14 @@ export const setService = {
         .eq('workout_id', id);
         if(error) console.error("Error fecthing sets for workout", error.message);
         return data ?? [];
+    },
+    async resetSetsByWorkoutId(id:number) {
+        const {error:insertError} = await supabase
+        .from("sets")
+        .delete()
+        .eq("workout_id", id);
+        if(insertError) console.error("Error deleting set: ", insertError.message);
+
+        return;
     }
 };
