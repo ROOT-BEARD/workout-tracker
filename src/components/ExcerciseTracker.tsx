@@ -54,9 +54,10 @@ export default function ExcerciseTracker({
         <ListBoxItemIndicator />
     </ListBoxItem>);
 
-    const testSet:NewSet={
+    const defaultSet:NewSet={
         weight: 0,
         reps: 0,
+        excercise: ''
     };
 
     const addedExercisesList = addedExercises.map((exercise,exerciseIndex) => (
@@ -82,7 +83,7 @@ export default function ExcerciseTracker({
             <></>}
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Excercise</Button>
-                <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
+                <Button onClick={()=>onAddset(exerciseIndex,{...defaultSet, excercise: exercise.name})}>Add Set</Button>
             </div>
         </CollaspableCard>
     ));
