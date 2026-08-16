@@ -9,7 +9,7 @@ interface ExcerciseTrackerProps{
     availableExercises: string[];
     addedExercises: Excercise[];
     onAddExercise: (newExcercise: Excercise) => void;
-    onRemoveExercise: () => void;
+    onRemoveExercise: (excerciseIndex: number) => void;
     onRemoveSet: (index: number, setIndex:number) => void;
     onAddset: (index: number, newSet: NewSet) => void;
     onEditSet: (exerciseIndex:number,setIndex:number,newSet:NewSet) => void;
@@ -80,7 +80,10 @@ export default function ExcerciseTracker({
                 </Card>
             ):
             <></>}
-            <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
+            <div style={{display:'flex', justifyContent:'space-between'}}>
+                <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Excercise</Button>
+                <Button onClick={()=>onAddset(exerciseIndex,testSet)}>Add Set</Button>
+            </div>
         </CollaspableCard>
     ));
 
@@ -88,7 +91,6 @@ export default function ExcerciseTracker({
         <div style={{display:'flex', alignItems:'center', flexDirection:'column'}}>
             <div>
                 {addedExercisesList}
-                <Button onClick={onRemoveExercise}>-</Button>
                 <Popover isOpen={popoverOpen} onOpenChange={setPopoverOpen}>
                     <Popover.Trigger>
                         <Button>+</Button>

@@ -73,8 +73,10 @@ export default function WorkoutPage(){
             );
     };
 
-    const handleRemoveExercise = () => {
-        setAddedExercises(prev => prev.slice(0, -1));
+    const handleRemoveExercise = (excerciseIndex:number) => {
+        const updatedExercises = [...addedExercises];
+        updatedExercises.splice(excerciseIndex, 1); 
+        setAddedExercises(updatedExercises);
     };
 
     const handleEditSet = (exerciseIndex:number,setIndex:number,newSet:NewSet) => {

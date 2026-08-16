@@ -23,6 +23,16 @@ export const workoutService = {
         if(error) console.error("Error getting workout", error.message);
         return data;
     },
+    async getWorkoutById(Id:number): Promise<Workout>{
+        const{data, error} = await supabase
+        .from("workouts")
+        .select('*')
+        .eq('id', Id)
+        .single();        
+
+        if(error) console.error("Error getting workout by ID", error.message);
+        return data;
+    },
     async createWorkout(NewWorkout:NewWorkout,excercises:Excercise[]): Promise<Workout>{
         const{data,error} = await supabase
         .from("workouts")
@@ -31,8 +41,6 @@ export const workoutService = {
         .single();
 
         const workoutId = data.id;
-
-
 
         // nested for loop approach
         /*for(let i:number = 0; i < excercises.length; i++){
@@ -64,6 +72,7 @@ export const workoutService = {
                 reps: set.reps,
                 weight: set.weight,
                 workout_id: data.id,
+                created_at: data.crea
             }))
         );
 

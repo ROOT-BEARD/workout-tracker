@@ -29,6 +29,14 @@ export const setService = {
         if(error) console.error("Error fecthing sets for workout", error.message);
         return data ?? [];
     },
+    async getSetsByExcercise(excercise:string): Promise<Set[]>{
+        const {data,error} = await supabase
+        .from("sets")
+        .select("*")
+        .eq('excercise', excercise);
+        if(error) console.error("Error fecthing sets for excercise", error.message);
+        return data ?? [];
+    },
     async resetSetsByWorkoutId(id:number) {
         const {error:insertError} = await supabase
         .from("sets")
@@ -37,5 +45,8 @@ export const setService = {
         if(insertError) console.error("Error deleting set: ", insertError.message);
 
         return;
+    },
+    async getSetsWithDate() {
+        
     }
 };
