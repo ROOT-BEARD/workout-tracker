@@ -2,8 +2,8 @@ import WorkoutCalender from "./WorkoutCalender";
 import "./WorkoutPage.css";
 import { useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
-import ExcerciseTracker from "./ExcerciseTracker";
-import type { NewSet, Excercise } from "../types/database";
+import ExerciseTracker from "./ExerciseTracker";
+import type { NewSet, Exercise } from "../types/database";
 import { Button, Card } from "@heroui/react";
 import { workoutService } from "../services/workoutService";
 import { setService } from "../services/setService";
@@ -23,10 +23,10 @@ const MOCK_EXERCISES: string[] = [
 export default function WorkoutPage(){
     
     const [pickedDate, setDate] = useState<CalendarDate>(today(getLocalTimeZone()));
-    const [addedExercises, setAddedExercises] = useState<Excercise[]>([]);
+    const [addedExercises, setAddedExercises] = useState<Exercise[]>([]);
 
-    const handleAddExercise = (newExcercise:Excercise) => {
-        setAddedExercises(prev => [...prev, newExcercise]);
+    const handleAddExercise = (newExercise:Exercise) => {
+        setAddedExercises(prev => [...prev, newExercise]);
     };
 
     const handleNewDate = async(date:CalendarDate)=>{
@@ -39,18 +39,18 @@ export default function WorkoutPage(){
         }
         const workoutId = pickedWorkout.id;
         const newSets = await setService.getSetsById(workoutId);
-        const updatedExercises: Excercise[] = [];
+        const updatedExercises: Exercise[] = [];
         for(let i:number = 0; i < newSets.length; i++){
             const currentSet = newSets[i];
             const matchedExercise = updatedExercises.find(
-                (excercise)=>excercise.name === currentSet.excercise
+                (exercise)=>exercise.name === currentSet.exercise
             );
             if(matchedExercise){
                 matchedExercise.sets.push(currentSet);
             }
             else {
                 updatedExercises.push({
-                    name: currentSet.excercise,
+                    name: currentSet.exercise,
                     sets: [currentSet]
                 });
             }
@@ -73,9 +73,9 @@ export default function WorkoutPage(){
             );
     };
 
-    const handleRemoveExercise = (excerciseIndex:number) => {
+    const handleRemoveExercise = (exerciseIndex:number) => {
         const updatedExercises = [...addedExercises];
-        updatedExercises.splice(excerciseIndex, 1); 
+        updatedExercises.splice(exerciseIndex, 1); 
         setAddedExercises(updatedExercises);
     };
 
@@ -127,8 +127,8 @@ export default function WorkoutPage(){
             <div className="CalenderContainer">
                 <WorkoutCalender setDate={(date)=>handleNewDate(date)} pickedDate={pickedDate}/>
             </div>
-            <Card variant="tertiary" className="ExcerciseTrackerCard">
-                <ExcerciseTracker
+            <Card variant="tertiary" className="ExerciseTrackerCard">
+                <ExerciseTracker
                 onEditSet={handleEditSet}
                 onRemoveSet={handleRemoveSet}
                 availableExercises={MOCK_EXERCISES}

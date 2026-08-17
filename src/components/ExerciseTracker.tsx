@@ -1,21 +1,21 @@
 import { Card, Button, Popover, ComboBox, Input, ListBox, ListBoxItem, ListBoxItemIndicator } from "@heroui/react";
 import { useState } from "react";
-import type { NewSet, Excercise } from "../types/database";
+import type { NewSet, Exercise } from "../types/database";
 import SetPopup from "./SetPopup";
-import "./ExcerciseTracker.css";
+import "./ExerciseTracker.css";
 import CollaspableCard from "./CollaspableCard";
 
-interface ExcerciseTrackerProps{
+interface ExerciseTrackerProps{
     availableExercises: string[];
-    addedExercises: Excercise[];
-    onAddExercise: (newExcercise: Excercise) => void;
-    onRemoveExercise: (excerciseIndex: number) => void;
+    addedExercises: Exercise[];
+    onAddExercise: (newExercise: Exercise) => void;
+    onRemoveExercise: (exerciseIndex: number) => void;
     onRemoveSet: (index: number, setIndex:number) => void;
     onAddset: (index: number, newSet: NewSet) => void;
     onEditSet: (exerciseIndex:number,setIndex:number,newSet:NewSet) => void;
 };
 
-export default function ExcerciseTracker({
+export default function ExerciseTracker({
     availableExercises,
     addedExercises,
     onAddExercise,
@@ -23,41 +23,41 @@ export default function ExcerciseTracker({
     onAddset,
     onRemoveSet,
     onEditSet
-    }:ExcerciseTrackerProps)
+    }:ExerciseTrackerProps)
     {
-    const [selectedExcercise, setExcercise] = useState<string>("");
+    const [selectedExercise, setExercise] = useState<string>("");
     const [popoverOpen,setPopoverOpen] = useState<boolean>(false);
 
 
     const handleAdd = () => {
         const found = availableExercises.find(
-            (e) => e.toLocaleLowerCase() === selectedExcercise.toLowerCase()
+            (e) => e.toLocaleLowerCase() === selectedExercise.toLowerCase()
         );
         if(!found){
-            console.log("error adding excercise to added list");
+            console.log("error adding exercise to added list");
             return;
         }
 
-        const newExcercise:Excercise = {
+        const newExercise:Exercise = {
             name:found,
             sets:[]
         };
 
-        onAddExercise(newExcercise);
+        onAddExercise(newExercise);
         setPopoverOpen(false);
-        setExcercise("");
+        setExercise("");
     }
 
-    const exerciseList = availableExercises.map(excercise => 
-    <ListBoxItem textValue={excercise}>
-        {excercise}
+    const exerciseList = availableExercises.map(exercise => 
+    <ListBoxItem textValue={exercise}>
+        {exercise}
         <ListBoxItemIndicator />
     </ListBoxItem>);
 
     const defaultSet:NewSet={
         weight: 0,
         reps: 0,
-        excercise: ''
+        exercise: ''
     };
 
     const addedExercisesList = addedExercises.map((exercise,exerciseIndex) => (
@@ -82,8 +82,8 @@ export default function ExcerciseTracker({
             ):
             <></>}
             <div style={{display:'flex', justifyContent:'space-between'}}>
-                <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Excercise</Button>
-                <Button onClick={()=>onAddset(exerciseIndex,{...defaultSet, excercise: exercise.name})}>Add Set</Button>
+                <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Exercise</Button>
+                <Button onClick={()=>onAddset(exerciseIndex,{...defaultSet, exercise: exercise.name})}>Add Set</Button>
             </div>
         </CollaspableCard>
     ));
@@ -98,18 +98,18 @@ export default function ExcerciseTracker({
                     </Popover.Trigger>
                     <Popover.Content placement="top">
                         <Card>
-                            <h1>This is the excercise pop up</h1>
-                            <ComboBox inputValue={selectedExcercise}
-                                      onInputChange={setExcercise}
+                            <h1>This is the exercise pop up</h1>
+                            <ComboBox inputValue={selectedExercise}
+                                      onInputChange={setExercise}
                                     >
                                 <ComboBox.InputGroup>
-                                    <Input placeholder="Excercise Name"/>
+                                    <Input placeholder="Exercise Name"/>
                                 </ComboBox.InputGroup>
                                 <ListBox style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                     {exerciseList}
                                 </ListBox>
                             </ComboBox>
-                            <Button onClick={handleAdd}>ADD EXCERCISE</Button>
+                            <Button onClick={handleAdd}>ADD EXERCISE</Button>
                         </Card>
                     </Popover.Content>
                 </Popover>

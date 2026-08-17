@@ -28,12 +28,12 @@ export const setService = {
         if(error) console.error("Error fecthing sets for workout", error.message);
         return data ?? [];
     },
-    async getSetsByExcercise(excercise:string): Promise<Set[]>{
+    async getSetsByExercise(exercise:string): Promise<Set[]>{
         const {data,error} = await supabase
         .from("sets")
         .select("*")
-        .eq('excercise', excercise);
-        if(error) console.error("Error fecthing sets for excercise", error.message);
+        .eq('exercise', exercise);
+        if(error) console.error("Error fecthing sets for exercise", error.message);
         return data ?? [];
     },
     async resetSetsByWorkoutId(id:number) {

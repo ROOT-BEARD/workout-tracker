@@ -1,6 +1,6 @@
 import type { CalendarDate } from "@internationalized/date";
 import { supabase } from "../supabase-client";
-import type { Workout, NewWorkout, NewSet, Excercise } from "../types/database";
+import type { Workout, NewWorkout, NewSet, Exercise } from "../types/database";
 import { setService } from "./setService";
 
 export const workoutService = {
@@ -33,7 +33,7 @@ export const workoutService = {
         if(error) console.error("Error getting workout by ID", error.message);
         return data;
     },
-    async createWorkout(NewWorkout:NewWorkout,excercises:Excercise[]): Promise<Workout>{
+    async createWorkout(NewWorkout:NewWorkout,exercises:Exercise[]): Promise<Workout>{
         const{data,error} = await supabase
         .from("workouts")
         .insert(NewWorkout)
@@ -43,12 +43,12 @@ export const workoutService = {
         const workoutId = data.id;
 
         // nested for loop approach
-        for(let i:number = 0; i < excercises.length; i++){
-            for(let j:number = 0; j < excercises[i].sets.length; j++){
+        for(let i:number = 0; i < exercises.length; i++){
+            for(let j:number = 0; j < exercises[i].sets.length; j++){
                 const newSet:NewSet = {
-                    excercise:excercises[i].name,
-                    reps:excercises[i].sets[j].reps,
-                    weight:excercises[i].sets[j].weight,
+                    exercise:exercises[i].name,
+                    reps:exercises[i].sets[j].reps,
+                    weight:exercises[i].sets[j].weight,
                     workout_id:workoutId
                 };
                 await setService.createSet(newSet);
@@ -58,7 +58,7 @@ export const workoutService = {
         if(error) console.error("Error adding workout", error.message);
         return data;
     },
-    async updateWorkout(updatedWorkout:NewWorkout,updatedExercises:Excercise[],date:CalendarDate): Promise<Workout>{
+    async updateWorkout(updatedWorkout:NewWorkout,updatedExercises:Exercise[],date:CalendarDate): Promise<Workout>{
         const{data,error} = await supabase
         .from("workouts")
         .update(updatedWorkout)
@@ -66,9 +66,9 @@ export const workoutService = {
         .select('*')
         .single();
 
-        const flatSets:NewSet[] = updatedExercises.flatMap((excercise)=>
-            excercise.sets.map((set)=> ({
-                excercise: excercise.name,
+        const flatSets:NewSet[] = updatedExercises.flatMap((exercise)=>
+            exercise.sets.map((set)=> ({
+                exercise: exercise.name,
                 reps: set.reps,
                 weight: set.weight,
                 workout_id: data.id
