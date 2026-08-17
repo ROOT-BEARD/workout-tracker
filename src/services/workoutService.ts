@@ -43,7 +43,7 @@ export const workoutService = {
         const workoutId = data.id;
 
         // nested for loop approach
-        /*for(let i:number = 0; i < excercises.length; i++){
+        for(let i:number = 0; i < excercises.length; i++){
             for(let j:number = 0; j < excercises[i].sets.length; j++){
                 const newSet:NewSet = {
                     excercise:excercises[i].name,
@@ -53,7 +53,7 @@ export const workoutService = {
                 };
                 await setService.createSet(newSet);
             }
-        }*/
+        }
 
         if(error) console.error("Error adding workout", error.message);
         return data;
@@ -71,8 +71,7 @@ export const workoutService = {
                 excercise: excercise.name,
                 reps: set.reps,
                 weight: set.weight,
-                workout_id: data.id,
-                created_at: data.crea
+                workout_id: data.id
             }))
         );
 
@@ -82,6 +81,7 @@ export const workoutService = {
             const {error:insertError} = await supabase
             .from("sets")
             .insert(flatSets);
+            if(insertError) console.error("ERROR UPDATING SETS", insertError.message);
         }
 
         if(error) console.error("Error updating workout", error.message);

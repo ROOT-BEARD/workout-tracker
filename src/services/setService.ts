@@ -10,8 +10,7 @@ export const setService = {
 
         if(error) console.error("Error getting sets: ", error.message);
         return data ?? [];
-    },
-    
+    },    
     async createSet(NewSet: NewSet): Promise<Set>{
         const {data, error} = await supabase
             .from("sets")
@@ -38,15 +37,12 @@ export const setService = {
         return data ?? [];
     },
     async resetSetsByWorkoutId(id:number) {
-        const {error:insertError} = await supabase
+        const {error:deleteError} = await supabase
         .from("sets")
         .delete()
         .eq("workout_id", id);
-        if(insertError) console.error("Error deleting set: ", insertError.message);
+        if(deleteError) console.error("Error deleting set: ", deleteError.message);
 
         return;
-    },
-    async getSetsWithDate() {
-        
     }
 };

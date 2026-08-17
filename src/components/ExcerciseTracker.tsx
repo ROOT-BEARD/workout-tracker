@@ -72,7 +72,7 @@ export default function ExcerciseTracker({
                         <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,index,newSet)}>
                             <Button>Edit</Button>
                         </SetPopup>
-                        <Button onClick={()=>onRemoveSet(exerciseIndex,index)}>Remove</Button>
+                        <Button variant="danger" onClick={()=>onRemoveSet(exerciseIndex,index)}>X</Button>
                     </Card.Header>
                     <Card.Content style={{display:'flex', flexDirection:'row'}}>
                         <Card variant="secondary">Reps {set.reps}</Card>
