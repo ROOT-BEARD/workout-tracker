@@ -1,10 +1,10 @@
 export interface Set {
     id?: number;
-    created_at?: string;
+    created_at: string;
     reps:number;
     weight:number;
-    excercise:string;
-    workout_id?:number;
+    exercise:string;
+    workout_id:number;
 }
 
 export interface Workout{
@@ -12,7 +12,7 @@ export interface Workout{
     created_at: string;
 }
 
-export interface Excercise {
+export interface Exercise {
     name:string;
     sets:NewSet[];
 }

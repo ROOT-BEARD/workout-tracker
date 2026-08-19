@@ -8,7 +8,7 @@ interface SetPopupProps{
 };
 
 export default function SetPopup({children,onAddSet}:SetPopupProps){
-    const [newSet, setSet] = useState<NewSet>({reps: 0, weight: 0,excercise:''});
+    const [newSet, setSet] = useState<NewSet>({reps: 0, weight: 0,exercise:''});
     
     const handleSubmit = () => {
         onAddSet(newSet);

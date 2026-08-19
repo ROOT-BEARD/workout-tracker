@@ -3,7 +3,7 @@ import "./WorkoutPage.css";
 import { useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 import ExerciseTracker from "./ExerciseTracker";
-import type { NewSet, Exercise } from "../types/database";
+import type { NewSet, Exercise, Workout } from "../types/database";
 import { Button, Card } from "@heroui/react";
 import { workoutService } from "../services/workoutService";
 import { setService } from "../services/setService";
@@ -21,13 +21,20 @@ const MOCK_EXERCISES: string[] = [
 ];                      
 
 export default function WorkoutPage(){
-    
     const [pickedDate, setDate] = useState<CalendarDate>(today(getLocalTimeZone()));
     const [addedExercises, setAddedExercises] = useState<Exercise[]>([]);
+    const [workoutDates, setWorkoutDates] = useState<string[]>([]);
 
     const handleAddExercise = (newExercise:Exercise) => {
         setAddedExercises(prev => [...prev, newExercise]);
     };
+
+    const getJustDate = (date:string):string => {const parts:string[] = date.split('T'); return parts[0]};
+
+    const getWorkoutDates = async() =>{
+        const workouts:Workout[] = await workoutService.getWorkouts();
+        setWorkoutDates(workouts.map(curWorkout=>getJustDate(curWorkout.created_at)));
+    }
 
     const handleNewDate = async(date:CalendarDate)=>{
         setDate(date);
@@ -122,10 +129,12 @@ export default function WorkoutPage(){
         }
     };
     
+    getWorkoutDates();
+
     return(
         <div>
             <div className="CalenderContainer">
-                <WorkoutCalender setDate={(date)=>handleNewDate(date)} pickedDate={pickedDate}/>
+                <WorkoutCalender workoutDates={workoutDates} setDate={(date)=>handleNewDate(date)} pickedDate={pickedDate}/>
             </div>
             <Card variant="tertiary" className="ExerciseTrackerCard">
                 <ExerciseTracker

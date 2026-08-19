@@ -4,14 +4,13 @@ import type { Workout, NewWorkout, NewSet, Exercise } from "../types/database";
 import { setService } from "./setService";
 
 export const workoutService = {
-    async getWorkout(): Promise<Workout>{
+    async getWorkouts(): Promise<Workout[]>{
         const{data, error} = await supabase
         .from("workouts")
-        .select()
-        .single();        
+        .select();        
 
-        if(error) console.error("Error getting workout", error.message);
-        return data;
+        if(error) console.error("Error getting workouts", error.message);
+        return data??[];
     },
     async getWorkoutByDate(date:CalendarDate): Promise<Workout>{
         const{data, error} = await supabase
