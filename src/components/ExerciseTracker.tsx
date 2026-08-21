@@ -5,6 +5,7 @@ import SetPopup from "./SetPopup";
 import "./ExerciseTracker.css";
 import CollaspableCard from "./CollaspableCard";
 import ExerciseComboBox from "./ExerciseSelectPopup";
+import SetCard from "./SetCard";
 
 interface ExerciseTrackerProps{
     availableExercises: string[];
@@ -47,37 +48,29 @@ export default function ExerciseTracker({
         setExercise("");
     }
 
-    const defaultSet:NewSet={
+    const emptySet:NewSet={
         weight: 0,
         reps: 0,
         exercise: '',
-        workout_id: 0
+        workout_id: 0,
+        user_id: ''
     };
 
     const addedExercisesList = addedExercises.map((exercise,exerciseIndex) => (
         <CollaspableCard title={exercise.name}>
             {exercise.sets.length > 0 
-            ?exercise.sets.map((set,index)=>
-                <Card variant="secondary" className="SetCard">
-                    <Card.Header style={{display:'flex', justifyContent:'space-between', flexDirection:'row'}}>
-                        <div>
-                            Set {index + 1}
-                        </div>
-                        <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,index,newSet)}>
-                            <Button>Edit</Button>
-                        </SetPopup>
-                        <Button variant="danger" onClick={()=>onRemoveSet(exerciseIndex,index)}>X</Button>
-                    </Card.Header>
-                    <Card.Content style={{display:'flex', flexDirection:'row'}}>
-                        <Card variant="secondary">Reps {set.reps}</Card>
-                        <Card variant="secondary">Weight {set.weight}</Card>
-                    </Card.Content>
-                </Card>
+            ?exercise.sets.map((set,setIndex)=>
+                <SetCard 
+                setIndex={setIndex}
+                exerciseIndex={exerciseIndex}
+                onEditSet={onEditSet}
+                onRemoveSet={onRemoveSet}
+                set={set}/>
             ):
             <></>}
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Exercise</Button>
-                <Button onClick={()=>onAddset(exerciseIndex,{...defaultSet, exercise: exercise.name})}>Add Set</Button>
+                <Button onClick={()=>onAddset(exerciseIndex,{...emptySet, exercise: exercise.name})}>Add Set</Button>
             </div>
         </CollaspableCard>
     ));
