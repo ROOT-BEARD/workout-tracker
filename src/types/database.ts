@@ -5,11 +5,13 @@ export interface Set {
     weight:number;
     exercise:string;
     workout_id:number;
+    user_id:string;
 }
 
 export interface Workout{
     id: number;
     created_at: string;
+    user_id: string;
 }
 
 export interface Exercise {
@@ -17,5 +19,13 @@ export interface Exercise {
     sets:NewSet[];
 }
 
+export interface Account {
+    email:string;
+    username:string;
+    created_at?: string;
+    password:string;
+}
+
+export type NewAccount = Omit<Account, "created_at">;
 export type NewSet = Omit<Set, "id"|"created_at">;
-export type NewWorkout = Omit<Workout, "id">
+export type NewWorkout = Omit<Workout, "id">;

@@ -1,12 +1,13 @@
-import WorkoutCalender from "./WorkoutCalender";
+import WorkoutCalender from "../components/WorkoutCalender";
 import "./WorkoutPage.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
-import ExerciseTracker from "./ExerciseTracker";
+import ExerciseTracker from "../components/ExerciseTracker";
 import type { NewSet, Exercise, Workout } from "../types/database";
 import { Button, Card } from "@heroui/react";
 import { workoutService } from "../services/workoutService";
 import { setService } from "../services/setService";
+import { useUser } from "../contexts/UserContext";
 
 const MOCK_EXERCISES: string[] = [
     "Bench Press",
@@ -21,6 +22,7 @@ const MOCK_EXERCISES: string[] = [
 ];                      
 
 export default function WorkoutPage(){
+    const { user, isLoading } = useUser();
     const [pickedDate, setDate] = useState<CalendarDate>(today(getLocalTimeZone()));
     const [addedExercises, setAddedExercises] = useState<Exercise[]>([]);
     const [workoutDates, setWorkoutDates] = useState<string[]>([]);
@@ -32,20 +34,23 @@ export default function WorkoutPage(){
     const getJustDate = (date:string):string => {const parts:string[] = date.split('T'); return parts[0]};
 
     const getWorkoutDates = async() =>{
-        const workouts:Workout[] = await workoutService.getWorkouts();
+        if(!user?.id) return;
+        const workouts:Workout[] = await workoutService.getWorkouts(user.id);
         setWorkoutDates(workouts.map(curWorkout=>getJustDate(curWorkout.created_at)));
     }
 
     const handleNewDate = async(date:CalendarDate)=>{
         setDate(date);
-        const pickedWorkout = await workoutService.getWorkoutByDate(date);
+        if(!user?.id) return;
+        const pickedWorkout = await workoutService.getWorkoutByDate(date, user.id);
         if(!pickedWorkout){
             console.log("there is no workout for this day");
             setAddedExercises([]);
             return;
         }
         const workoutId = pickedWorkout.id;
-        const newSets = await setService.getSetsById(workoutId);
+        const userId = user.id;
+        const newSets = await setService.getSetsById(workoutId, userId);
         const updatedExercises: Exercise[] = [];
         for(let i:number = 0; i < newSets.length; i++){
             const currentSet = newSets[i];
@@ -119,17 +124,25 @@ export default function WorkoutPage(){
     };
 
     const handleSubmit = async () => {
+        if(!user){
+            console.log("can't");
+            return;
+        }
         const newWorkoutData = {
             created_at: pickedDate.toString(), // e.g., "2026-08-13"
+            user_id:user.id
         };
-        if(!await workoutService.getWorkoutByDate(pickedDate)){
+        if(!await workoutService.getWorkoutByDate(pickedDate,user.id)){
             await workoutService.createWorkout(newWorkoutData,addedExercises);
         } else{
             await workoutService.updateWorkout(newWorkoutData, addedExercises, pickedDate);
         }
     };
-    
-    getWorkoutDates();
+
+    useEffect(()=> {
+        handleNewDate(today(getLocalTimeZone()));
+        getWorkoutDates();
+    }, [user?.id]);
 
     return(
         <div>

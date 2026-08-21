@@ -15,6 +15,7 @@ export default function MenuDrawer(){
                         <Drawer.Body style={{display:'flex', flexDirection:'column'}}>
                             <Link to={'/'}><Button variant="ghost">HOME</Button></Link>
                             <Link to={'/WorkoutPage'}><Button variant="ghost" >WORKOUT CALENDAR</Button></Link>
+                            <Link to={'/AccountPage'}><Button variant="ghost" >ACCOUNT</Button></Link>
                         </Drawer.Body>
                     </Drawer.Dialog>
                 </Drawer.Content>

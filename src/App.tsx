@@ -1,10 +1,10 @@
 
 import './App.css'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import { Card} from '@heroui/react';
-import WorkoutPage from './components/WorkoutPage';
+import AccountPage from './pages/AccountPage'
+import WorkoutPage from './pages/WorkoutPage';
 import MenuDrawer from './components/MenuDrawer';
-import DashBoard from './components/DashBoard';
+import DashBoard from './pages/DashBoard';
 
 export default function App() {
 
@@ -14,6 +14,7 @@ export default function App() {
       <Routes>
           <Route path='/' element={<DashBoard/>}/>
           <Route path='/WorkoutPage' element={<WorkoutPage/>}/>
+          <Route path='/AccountPage' element={<AccountPage/>}/>
       </Routes>
     </BrowserRouter>
   );

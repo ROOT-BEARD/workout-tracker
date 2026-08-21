@@ -4,19 +4,21 @@ import type { Workout, NewWorkout, NewSet, Exercise } from "../types/database";
 import { setService } from "./setService";
 
 export const workoutService = {
-    async getWorkouts(): Promise<Workout[]>{
+    async getWorkouts(user_id:string): Promise<Workout[]>{
         const{data, error} = await supabase
         .from("workouts")
-        .select();        
+        .select('*')
+        .eq("user_id", user_id);        
 
         if(error) console.error("Error getting workouts", error.message);
         return data??[];
     },
-    async getWorkoutByDate(date:CalendarDate): Promise<Workout>{
+    async getWorkoutByDate(date:CalendarDate,user_id:string): Promise<Workout>{
         const{data, error} = await supabase
         .from("workouts")
         .select('*')
         .eq('created_at', date)
+        .eq('user_id',user_id)
         .single();        
 
         if(error) console.error("Error getting workout", error.message);
@@ -48,7 +50,8 @@ export const workoutService = {
                     exercise:exercises[i].name,
                     reps:exercises[i].sets[j].reps,
                     weight:exercises[i].sets[j].weight,
-                    workout_id:workoutId
+                    workout_id:workoutId,
+                    user_id:data.user_id
                 };
                 await setService.createSet(newSet);
             }
@@ -70,7 +73,8 @@ export const workoutService = {
                 exercise: exercise.name,
                 reps: set.reps,
                 weight: set.weight,
-                workout_id: data.id
+                workout_id: data.id,
+                user_id: data.user_id
             }))
         );
 
