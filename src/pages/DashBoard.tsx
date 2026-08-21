@@ -1,4 +1,4 @@
-import { Card, Input } from "@heroui/react";
+import { Card, Input, Switch, ToggleButton } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { LineChart, CartesianGrid, Legend, XAxis, YAxis, ResponsiveContainer, Line, Tooltip, DefaultTooltipContent } from "recharts";
 import { supabase } from "../supabase-client";
@@ -28,6 +28,7 @@ export default function DashBoard(){
     const [max, setMax] = useState<number>(0);
     const [maxRep, setMaxRep] = useState<number>(10);
     const [minRep, setMinRep] =useState<number>(0);
+    const [showMaxWeight, setShowMaxWeight] = useState<boolean>(true);
     const [selectedExercise, setExercise] = useState<string>("");
     const {user} = useUser();
 
@@ -41,18 +42,25 @@ export default function DashBoard(){
 
     const getPoints = async() =>{
         if(!user?.id) return;
-        const {data: pointData ,error: pointError} = await supabase.rpc
+
+        const {data: pointData ,error: pointError} = showMaxWeight? await supabase.rpc
         ("exercise_max_name_date",
             {   exercise_name: selectedExercise,
                 low:minRep,
                 high:maxRep,
                 userid:user.id
+            }) :  await supabase.rpc
+        ("get_workoutsets_for_exercise",
+            {   exercise_name: selectedExercise,
+                low:minRep, 
+                high:maxRep,
+                userid:user.id
             });
 
-        const points:Point[] = (pointData || []).map((item:any)=>({
-            x: item.workout_date,
-            weight: item.max_weight,
+        const points:Point[] = (pointData || []).map((item:any,index:number)=>({
+            x: `${item.workout_date} - Set ${index + 1}`,
             reps: item.set_reps,
+            weight: showMaxWeight ? item.max_weight : item.set_weight
         }));
 
         setPoints(points);
@@ -69,26 +77,34 @@ export default function DashBoard(){
 
     useEffect(()=>{
         getPoints();
-    },[maxRep, minRep]);
+    },[maxRep, minRep, showMaxWeight]);
 
 
     return(
-        <Card style={{height:'auto', width:'1500px'}} variant="secondary">
+        <Card className="GraphCard" variant="secondary">
             <div style={{display:'flex', justifyContent:"space-between"}}>
             <ExerciseComboBox 
                 selectedExercise={selectedExercise}
                 setExercise={setExercise}
                 availableExercises={MOCK_EXERCISES}
                 handleSubmit={handleSubmit}/>
-            <div style={{display:'flex', flexDirection:"column"}}>
-                MIN<Input value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
-                MAX<Input value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
-            </div>
+                <Switch isSelected={showMaxWeight} onChange={setShowMaxWeight}>
+                    <Switch.Content>
+                        <Switch.Control>
+                        <Switch.Thumb />
+                        </Switch.Control>
+                        Only show max weight sets
+                    </Switch.Content>
+                </Switch>
+                <div style={{display:'flex', flexDirection:"column"}}>
+                    MIN<Input value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
+                    MAX<Input value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
+                </div>
             </div>
             <h1>EXERCISE: {selectedExercise}</h1>
             <h1>MAX WEIGHT: {max}</h1>
             <ResponsiveContainer width="100%" height={400} minWidth={0}>
-                <LineChart data={points} margin={{ top: 20, right: 20, left: 20, bottom: 10 }}>
+                <LineChart data={points}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
                     <YAxis yAxisId='leftY' stroke="var(--color-text-3)" domain={[0, 'auto']} />
