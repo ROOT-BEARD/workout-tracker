@@ -1,27 +1,17 @@
-import { Card, Input, Switch, ToggleButton } from "@heroui/react";
+import { Card, Input, Switch } from "@heroui/react";
 import { useEffect, useState } from "react";
-import { LineChart, CartesianGrid, Legend, XAxis, YAxis, ResponsiveContainer, Line, Tooltip, DefaultTooltipContent } from "recharts";
+import { LineChart, CartesianGrid, Legend, XAxis, YAxis, ResponsiveContainer, Line, Tooltip } from "recharts";
 import { supabase } from "../supabase-client";
 import ExerciseComboBox from "../components/ExerciseSelectPopup";
 import { useUser } from "../contexts/UserContext";
+import type { NewMovement } from "../types/database";
+import { movementService } from "../services/movementService";
 
 interface Point{
     x:string,
     weight:number
     reps:number
 };
-
-const MOCK_EXERCISES: string[] = [
-    "Bench Press",
-    "Incline Dumbbell Press",
-    "Squat",
-    "Romanian Deadlift",
-    "Barbell Deadlift",
-    "Lat Pulldown",
-    "Overhead Shoulder Press",
-    "Tricep Pushdown",
-    "Bicep Curl"
-];  
 
 export default function DashBoard(){
     const [points, setPoints] = useState<Point[]>([]);
@@ -30,6 +20,7 @@ export default function DashBoard(){
     const [minRep, setMinRep] =useState<number>(0);
     const [showMaxWeight, setShowMaxWeight] = useState<boolean>(true);
     const [selectedExercise, setExercise] = useState<string>("");
+    const [movements, setMovements] = useState<NewMovement[]>([]);
     const {user} = useUser();
 
     
@@ -56,12 +47,18 @@ export default function DashBoard(){
                 high:maxRep,
                 userid:user.id
             });
+        
+        const setCount:Record<string,number> = {};
 
-        const points:Point[] = (pointData || []).map((item:any,index:number)=>({
-            x: `${item.workout_date} - Set ${index + 1}`,
+        const points:Point[] = (pointData || []).map((item:any)=>{
+            setCount[item.workout_date] = (setCount[item.workout_date] || 0) + 1;
+
+            return {
+            x: showMaxWeight?`${item.workout_date}`:`${item.workout_date} - set ${setCount[item.workout_date]}`,
             reps: item.set_reps,
-            weight: showMaxWeight ? item.max_weight : item.set_weight
-        }));
+            weight: showMaxWeight ? item.max_weight : item.set_weight,
+            };
+        });
 
         setPoints(points);
 
@@ -75,8 +72,14 @@ export default function DashBoard(){
         setMax(data ?? 0);
     };
 
+    const getMovements = async()=>{
+        const availableMovements = await movementService.getMovements();
+        setMovements(availableMovements);
+    }
+
     useEffect(()=>{
         getPoints();
+        getMovements();
     },[maxRep, minRep, showMaxWeight]);
 
 
@@ -86,7 +89,7 @@ export default function DashBoard(){
             <ExerciseComboBox 
                 selectedExercise={selectedExercise}
                 setExercise={setExercise}
-                availableExercises={MOCK_EXERCISES}
+                availableExercises={movements.map(movement=>movement.name)}
                 handleSubmit={handleSubmit}/>
                 <Switch isSelected={showMaxWeight} onChange={setShowMaxWeight}>
                     <Switch.Content>

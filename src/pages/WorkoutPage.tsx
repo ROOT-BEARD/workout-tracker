@@ -3,35 +3,30 @@ import "./WorkoutPage.css";
 import { useEffect, useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 import ExerciseTracker from "../components/ExerciseTracker";
-import type { NewSet, Exercise, Workout } from "../types/database";
+import type { NewSet, Exercise, Workout, NewMovement } from "../types/database";
 import { Button, Card } from "@heroui/react";
 import { workoutService } from "../services/workoutService";
 import { setService } from "../services/setService";
-import { useUser } from "../contexts/UserContext";
-
-const MOCK_EXERCISES: string[] = [
-    "Bench Press",
-    "Incline Dumbbell Press",
-    "Squat",
-    "Romanian Deadlift",
-    "Barbell Deadlift",
-    "Lat Pulldown",
-    "Overhead Shoulder Press",
-    "Tricep Pushdown",
-    "Bicep Curl"
-];                      
+import { useUser } from "../contexts/UserContext";              
+import { movementService } from "../services/movementService";
 
 export default function WorkoutPage(){
     const { user, isLoading } = useUser();
     const [pickedDate, setDate] = useState<CalendarDate>(today(getLocalTimeZone()));
     const [addedExercises, setAddedExercises] = useState<Exercise[]>([]);
     const [workoutDates, setWorkoutDates] = useState<string[]>([]);
+    const [movements, setMovements] = useState<NewMovement[]>([]);
 
     const handleAddExercise = (newExercise:Exercise) => {
         setAddedExercises(prev => [...prev, newExercise]);
     };
 
     const getJustDate = (date:string):string => {const parts:string[] = date.split('T'); return parts[0]};
+
+    const getMovements = async() => {
+        const availableMovements = await movementService.getMovements();
+        setMovements(availableMovements);
+    }
 
     const getWorkoutDates = async() =>{
         if(!user?.id) return;
@@ -142,6 +137,7 @@ export default function WorkoutPage(){
     useEffect(()=> {
         handleNewDate(today(getLocalTimeZone()));
         getWorkoutDates();
+        getMovements();
     }, [user?.id]);
 
     return(
@@ -153,7 +149,7 @@ export default function WorkoutPage(){
                 <ExerciseTracker
                 onEditSet={handleEditSet}
                 onRemoveSet={handleRemoveSet}
-                availableExercises={MOCK_EXERCISES}
+                availableExercises={movements.map(movement=>movement.name)}
                 addedExercises={addedExercises}
                 onAddExercise={handleAddExercise}
                 onRemoveExercise={handleRemoveExercise}

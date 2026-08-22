@@ -1,4 +1,4 @@
-import { Card, Button} from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useState } from "react";
 import type { NewSet, Exercise } from "../types/database";
 import SetPopup from "./SetPopup";
@@ -60,15 +60,17 @@ export default function ExerciseTracker({
         <CollaspableCard title={exercise.name}>
             {exercise.sets.length > 0 
             ?exercise.sets.map((set,setIndex)=>
-                <SetCard 
-                setIndex={setIndex}
-                exerciseIndex={exerciseIndex}
-                onEditSet={onEditSet}
-                onRemoveSet={onRemoveSet}
-                set={set}/>
+                <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,setIndex,newSet)}>
+                    <SetCard 
+                    setIndex={setIndex}
+                    exerciseIndex={exerciseIndex}
+                    onEditSet={onEditSet}
+                    onRemoveSet={onRemoveSet}
+                    set={set}/>
+                </SetPopup>
             ):
             <></>}
-            <div style={{display:'flex', justifyContent:'space-between'}}>
+            <div className="flex justify-between">
                 <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Exercise</Button>
                 <Button onClick={()=>onAddset(exerciseIndex,{...emptySet, exercise: exercise.name})}>Add Set</Button>
             </div>

@@ -3,6 +3,7 @@ import { accountService } from "../services/accountService";
 import type { NewAccount } from "../types/database";
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
+import SigninLogin from "../components/SigninLogin";
 
 
 export default function AccountPage(){
@@ -29,32 +30,15 @@ export default function AccountPage(){
     };
 
     return(
-        <Card variant='secondary' style={{width:'500px'}}>
-            <form style={{display:'flex',flexDirection:'column'}}>
-                <TextField onChange={(val)=>
-                setSignInInfo((prev)=>({...prev, email:val}))}>
-                    <Label>EMAIL</Label>
-                    <Input placeholder="email"
-                    value={signInInfo.email}/>
-                </TextField>
-                <TextField onChange={(val)=>
-                setSignInInfo((prev)=>({...prev, username:val}))}>
-                    <Label>USERNAME</Label>
-                    <Input placeholder="username"
-                    value={signInInfo.username}/>
-                </TextField>
-                <TextField onChange={(val)=>
-                setSignInInfo((prev)=>({...prev, password:val}))}>
-                    <Label>PASSWORD</Label>
-                    <Input
-                    type='password' 
-                    placeholder="password"
-                    value={signInInfo.password}/>
-                </TextField>
-            </form>
-            <Button onClick={handleSignUp}>SIGN UP</Button>
-            {!user?<Button onClick={handleSignIn}>SIGN IN</Button>
-            :<Button onClick={handleSignOut}>SIGN OUT</Button>}
-        </Card>
+       !user?<SigninLogin
+            setSignInInfo={setSignInInfo}
+            signInInfo={signInInfo}
+            handleSignUp={handleSignUp}
+            handleSignIn={handleSignIn}
+       />:
+       <div style={{justifySelf:'center'}}>
+        <h1>HELLO {user.user_metadata.username}</h1>
+        <Button onClick={handleSignOut}>Sign Out</Button>
+       </div>
     );
 }
