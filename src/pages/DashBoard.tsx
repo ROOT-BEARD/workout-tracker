@@ -6,6 +6,7 @@ import ExerciseComboBox from "../components/ExerciseSelectPopup";
 import { useUser } from "../contexts/UserContext";
 import type { NewMovement } from "../types/database";
 import { movementService } from "../services/movementService";
+import MuscleRadarChart from "../components/MuscleRadarChart";
 
 interface Point{
     x:string,
@@ -84,64 +85,69 @@ export default function DashBoard(){
 
 
     return(
-        <Card className="GraphCard" variant="secondary">
-            <div style={{display:'flex', justifyContent:"space-between"}}>
-            <ExerciseComboBox 
-                selectedExercise={selectedExercise}
-                setExercise={setExercise}
-                availableExercises={movements.map(movement=>movement.name)}
-                handleSubmit={handleSubmit}/>
-                <Switch isSelected={showMaxWeight} onChange={setShowMaxWeight}>
-                    <Switch.Content>
-                        <Switch.Control>
-                        <Switch.Thumb />
-                        </Switch.Control>
-                        Only show max weight sets
-                    </Switch.Content>
-                </Switch>
-                <div style={{display:'flex', flexDirection:"column"}}>
-                    MIN<Input value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
-                    MAX<Input value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
+        <div>
+            <Card variant='secondary'>
+                <MuscleRadarChart userid={user?.id}/>
+            </Card>
+            <Card className="GraphCard" variant="secondary">
+                <div style={{display:'flex', justifyContent:"space-between"}}>
+                <ExerciseComboBox 
+                    selectedExercise={selectedExercise}
+                    setExercise={setExercise}
+                    availableExercises={movements.map(movement=>movement.name)}
+                    handleSubmit={handleSubmit}/>
+                    <Switch isSelected={showMaxWeight} onChange={setShowMaxWeight}>
+                        <Switch.Content>
+                            <Switch.Control>
+                            <Switch.Thumb />
+                            </Switch.Control>
+                            Only show max weight sets
+                        </Switch.Content>
+                    </Switch>
+                    <div style={{display:'flex', flexDirection:"column"}}>
+                        MIN<Input value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
+                        MAX<Input value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
+                    </div>
                 </div>
-            </div>
-            <h1>EXERCISE: {selectedExercise}</h1>
-            <h1>MAX WEIGHT: {max}</h1>
-            <ResponsiveContainer width="100%" height={400} minWidth={0}>
-                <LineChart data={points}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
-                    <YAxis yAxisId='leftY' stroke="var(--color-text-3)" domain={[0, 'auto']} />
-                    <YAxis yAxisId='rightY' orientation='right' stroke="var(--color-text-3)" domain={[0, 'auto']}/>
-                    <Tooltip
-                        cursor={{stroke: 'var(--color-border-2)'}}
-                    />
-                    <Legend/>
-                    <Line 
-                    type='monotone'
-                    dataKey='reps'
-                    yAxisId="rightY"
-                    stroke="#f16363" 
-                    strokeWidth={5}
-                    dot={{
-                    r: 5, 
-                    fill: 'var(--color-surface-base)',
-                    }}
-                    activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-                    />
-                    <Line 
-                    type='monotone'
-                    dataKey='weight'
-                    stroke="#6366f1" 
-                    strokeWidth={5}
-                    yAxisId="leftY"
-                    dot={{
-                    r: 5, 
-                    fill: 'var(--color-surface-base)',
-                    }}
-                    activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-                    />
-                </LineChart>
-            </ResponsiveContainer>
-        </Card>
+                <h1>EXERCISE: {selectedExercise}</h1>
+                <h1>MAX WEIGHT: {max}</h1>
+                <ResponsiveContainer width="100%" height={400} minWidth={0}>
+                    <LineChart data={points}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
+                        <YAxis yAxisId='leftY' stroke="var(--color-text-3)" domain={[0, 'auto']} />
+                        <YAxis yAxisId='rightY' orientation='right' stroke="var(--color-text-3)" domain={[0, 'auto']}/>
+                        <Tooltip
+                            cursor={{stroke: 'var(--color-border-2)'}}
+                        />
+                        <Legend/>
+                        <Line 
+                        type='monotone'
+                        dataKey='reps'
+                        yAxisId="rightY"
+                        stroke="#f16363" 
+                        strokeWidth={5}
+                        dot={{
+                        r: 5, 
+                        fill: 'var(--color-surface-base)',
+                        }}
+                        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
+                        />
+                        <Line 
+                        type='monotone'
+                        dataKey='weight'
+                        stroke="#6366f1" 
+                        strokeWidth={5}
+                        yAxisId="leftY"
+                        dot={{
+                        r: 5, 
+                        fill: 'var(--color-surface-base)',
+                        }}
+                        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+            </Card>
+        </div>
     );
 }   
