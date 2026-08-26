@@ -1,5 +1,5 @@
-import { Button, Card, ComboBox, Input, ListBox, ListBoxItem, ListBoxItemIndicator, Popover } from "@heroui/react";
-import { useState } from "react";
+import { Button, Card, ComboBox, FieldError, Input, ListBox, ListBoxItem, ListBoxItemIndicator, Popover } from "@heroui/react";
+import { useEffect, useState } from "react";
 
 interface ExerciseComboBoxProps{
     selectedExercise:string,
@@ -17,7 +17,7 @@ export default function ExerciseComboBox({
     const [popoverOpen,setPopoverOpen] = useState<boolean>(false);
 
     const exerciseList = availableExercises.map(exercise => 
-    <ListBoxItem textValue={exercise}>
+    <ListBoxItem id={exercise.toLowerCase()} textValue={exercise}>
         {exercise}
         <ListBoxItemIndicator />
     </ListBoxItem>
@@ -29,18 +29,22 @@ export default function ExerciseComboBox({
             <Popover.Content placement="bottom">
                 <Card>
                     <ComboBox inputValue={selectedExercise}
-                        onInputChange={setExercise}
-                    >
+                        onInputChange={(setExercise)}>
                         <ComboBox.InputGroup>
-                            <Input placeholder="Exercise Name"/>
-                        </ComboBox.InputGroup>
-                        <ListBox style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                            {exerciseList}
-                        </ListBox>
-                        <Button onClick={() =>{
-                            handleSubmit(),
-                            setPopoverOpen(false)}}>ADD EXERCISE</Button>
+                            <Input placeholder="Search for exercise..."/>
+                            <ComboBox.Trigger />
+                            </ComboBox.InputGroup>
+                        <ComboBox.Popover>
+                            <ListBox style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                {exerciseList}
+                            </ListBox>
+                        </ComboBox.Popover>
+                        <FieldError/>
                     </ComboBox>
+                    <Button onClick={() =>{
+                        handleSubmit(),
+                        setPopoverOpen(false)}}>ADD EXERCISE
+                    </Button>
                 </Card>
             </Popover.Content>
         </Popover>
