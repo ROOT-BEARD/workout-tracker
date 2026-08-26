@@ -21,6 +21,7 @@ export default function DashBoard(){
     const [minRep, setMinRep] =useState<number>(0);
     const [showMaxWeight, setShowMaxWeight] = useState<boolean>(true);
     const [selectedExercise, setExercise] = useState<string>("");
+    const [oneRepMaxGuess, setOneRepMaxGuess] = useState<number>(0);
     const [movements, setMovements] = useState<NewMovement[]>([]);
     const {user} = useUser();
 
@@ -71,11 +72,21 @@ export default function DashBoard(){
         );
         if(error)console.error("FAILURE TO FETCH DATA", error.message);
         setMax(data ?? 0);
+        getMaxGuess();
     };
 
     const getMovements = async()=>{
         const availableMovements = await movementService.getMovements();
         setMovements(availableMovements);
+    }
+
+    const getMaxGuess = async() =>{
+        const data = await supabase.rpc("calculate_one_rep_max",
+            {
+                movement_name: selectedExercise
+            }
+        );
+        setOneRepMaxGuess(data.data)
     }
 
     useEffect(()=>{
@@ -87,7 +98,7 @@ export default function DashBoard(){
     return(
         <div>
             <Card variant='secondary'>
-                <MuscleRadarChart userid={user?.id}/>
+                <MuscleRadarChart/>
             </Card>
             <Card className="GraphCard" variant="secondary">
                 <div style={{display:'flex', justifyContent:"space-between"}}>
@@ -110,7 +121,8 @@ export default function DashBoard(){
                     </div>
                 </div>
                 <h1>EXERCISE: {selectedExercise}</h1>
-                <h1>MAX WEIGHT: {max}</h1>
+                <h1>MAX WEIGHT: {max}lb</h1>
+                <h1>ONE REP MAX GUESS: {Math.round(oneRepMaxGuess)}lb</h1>
                 <ResponsiveContainer width="100%" height={400} minWidth={0}>
                     <LineChart data={points}>
                         <CartesianGrid strokeDasharray="3 3"/>

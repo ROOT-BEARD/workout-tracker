@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart } from "recharts";
+import { PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart, ResponsiveContainer, Tooltip } from "recharts";
 import { supabase } from "../supabase-client";
 import { useUser } from "../contexts/UserContext";
-import { addDays, startOfWeek } from "date-fns";
+import { addDays, startOfWeek, subDays } from "date-fns";
+import { Button } from "@heroui/react";
 
 
 interface radarPoint {
@@ -11,9 +12,11 @@ interface radarPoint {
 };
 
 export default function MuscleRadarChart(){
-    const {user} = useUser();
+    const {user, isLoading} = useUser();
     const [selectedGroups, setGroups] = useState<string[]>([]);
-    const [radarPoints, setRadarPoints] = useState<radarPoint[]>([]);
+    const start = startOfWeek(new Date(), {weekStartsOn: 0});
+    const [week, setWeek] = useState<Date>(start);
+    const [radarPoints, setRadarPoints] = useState<radarPoint[]>([{muscleGroup:'back', volume:1},{muscleGroup:'', volume:1}]);
 
     const exampleData = [
         {muscleGroup:'back', volume: 50},
@@ -21,47 +24,57 @@ export default function MuscleRadarChart(){
         {muscleGroup:'hamstring', volume: 60},
         {muscleGroup:'quad', volume: 40},
         {muscleGroup:'glutes', volume: 20},
+        {muscleGroup:'shoulders', volume: 20},
+        {muscleGroup:'core', volume: 20},
     ]
 
     const getRadarData = async() =>{
-        if(!user?.id) return;
-        const start = startOfWeek(new Date(), {weekStartsOn: 0});
-        const end = addDays(start, 7);
+        if(!user || !user.id) return;
+        const end = addDays(week, 7);
 
         const {data,error} = await supabase.rpc("get_range_volume",
             {
                 userid : user?.id,
-                start_date : start,
-                end_date : end
-            });
+                start_date : week.toISOString(),
+                end_date : end.toISOString(),
+            }
+        );
         if(error) console.error("ERROR GETTING RADAR POINTS", error.message);
 
         const points:radarPoint[] = (data || []).map((muscle:any)=>{
+            console.log('this should work');
             return{
                 muscleGroup:muscle.primary_muscle,
-                volume: muscle.total_volume
+                volume: Number(muscle.total_volume)
             };
         });
         setRadarPoints(points);
     };
 
     useEffect(()=>{
-        getRadarData();
-    },[]);
+        if(user?.id) getRadarData();
+    },[user?.id, week]);
     
     return(
-        <RadarChart 
-        style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '80vh', aspectRatio: 1 }}
-        data={radarPoints}
-        responsive
-        > 
-            <PolarGrid/>
-            <PolarAngleAxis dataKey='muscleGroup' />
-            <PolarRadiusAxis/>
-            <Radar
-                    dataKey='volume'
-                    fill="rgb(16, 161, 14)"
-                    fillOpacity={0.5}/>
-        </RadarChart>
+        <div style={{width:'100%', height:'750px', paddingBottom:'100px'}}>
+            <ResponsiveContainer width="100%" height="100%">
+                <RadarChart 
+                data={radarPoints}> 
+                    <PolarGrid/>
+                    <PolarAngleAxis dataKey='muscleGroup' />
+                    <PolarRadiusAxis/>
+                    <Tooltip/>
+                    <Radar
+                        dataKey='volume'
+                        fill="rgb(1, 255, 255)"
+                        fillOpacity={0.5}/>
+                </RadarChart>
+            </ResponsiveContainer>
+            <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
+            <div style={{justifySelf:'center'}}>
+                <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
+                <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
+            </div>
+        </div>
     );
 }
