@@ -17,7 +17,7 @@ export default function SetPopup({children,onAddSet}:SetPopupProps){
     return(
         <Popover>
             <Popover.Trigger>{children}</Popover.Trigger>
-            <Popover.Content placement="right">
+            <Popover.Content>
             <Card className='Card'>
                 <TextField onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
                 <Label>WEIGHT</Label>
