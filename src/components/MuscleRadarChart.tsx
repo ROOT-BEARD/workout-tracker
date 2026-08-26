@@ -4,29 +4,14 @@ import { supabase } from "../supabase-client";
 import { useUser } from "../contexts/UserContext";
 import { addDays, startOfWeek, subDays } from "date-fns";
 import { Button } from "@heroui/react";
-
-
-interface radarPoint {
-    muscleGroup:string,
-    volume:number
-};
+import type { radarPoint } from "../types/charts";
 
 export default function MuscleRadarChart(){
-    const {user, isLoading} = useUser();
-    const [selectedGroups, setGroups] = useState<string[]>([]);
+    const {user} = useUser();
     const start = startOfWeek(new Date(), {weekStartsOn: 0});
     const [week, setWeek] = useState<Date>(start);
-    const [radarPoints, setRadarPoints] = useState<radarPoint[]>([{muscleGroup:'back', volume:1},{muscleGroup:'', volume:1}]);
+    const [radarPoints, setRadarPoints] = useState<radarPoint[]>([]);
 
-    const exampleData = [
-        {muscleGroup:'back', volume: 50},
-        {muscleGroup:'chest', volume: 75},
-        {muscleGroup:'hamstring', volume: 60},
-        {muscleGroup:'quad', volume: 40},
-        {muscleGroup:'glutes', volume: 20},
-        {muscleGroup:'shoulders', volume: 20},
-        {muscleGroup:'core', volume: 20},
-    ]
 
     const getRadarData = async() =>{
         if(!user || !user.id) return;

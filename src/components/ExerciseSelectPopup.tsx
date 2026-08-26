@@ -1,5 +1,5 @@
 import { Button, Card, ComboBox, FieldError, Input, ListBox, ListBoxItem, ListBoxItemIndicator, Popover } from "@heroui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ExerciseComboBoxProps{
     selectedExercise:string,

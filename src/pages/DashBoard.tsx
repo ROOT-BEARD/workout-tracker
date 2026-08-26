@@ -1,21 +1,16 @@
 import { Card, Input, Switch } from "@heroui/react";
 import { useEffect, useState } from "react";
-import { LineChart, CartesianGrid, Legend, XAxis, YAxis, ResponsiveContainer, Line, Tooltip } from "recharts";
 import { supabase } from "../supabase-client";
 import ExerciseComboBox from "../components/ExerciseSelectPopup";
 import { useUser } from "../contexts/UserContext";
 import type { NewMovement } from "../types/database";
 import { movementService } from "../services/movementService";
 import MuscleRadarChart from "../components/MuscleRadarChart";
-
-interface Point{
-    x:string,
-    weight:number
-    reps:number
-};
+import type { LineChartPoint } from "../types/charts";
+import ExerciseLineChart from "../components/ExerciseLineChart";
 
 export default function DashBoard(){
-    const [points, setPoints] = useState<Point[]>([]);
+    const [lineChartPoints, setLineChartPoints] = useState<LineChartPoint[]>([]);
     const [max, setMax] = useState<number>(0);
     const [maxRep, setMaxRep] = useState<number>(10);
     const [minRep, setMinRep] =useState<number>(0);
@@ -52,7 +47,7 @@ export default function DashBoard(){
         
         const setCount:Record<string,number> = {};
 
-        const points:Point[] = (pointData || []).map((item:any)=>{
+        const points:LineChartPoint[] = (pointData || []).map((item:any)=>{
             setCount[item.workout_date] = (setCount[item.workout_date] || 0) + 1;
 
             return {
@@ -62,7 +57,7 @@ export default function DashBoard(){
             };
         });
 
-        setPoints(points);
+        setLineChartPoints(points);
 
         const {data, error} = await supabase.rpc("get_exercise_max",
             {
@@ -123,42 +118,7 @@ export default function DashBoard(){
                 <h1>EXERCISE: {selectedExercise}</h1>
                 <h1>MAX WEIGHT: {max}lb</h1>
                 <h1>ONE REP MAX GUESS: {Math.round(oneRepMaxGuess)}lb</h1>
-                <ResponsiveContainer width="100%" height={400} minWidth={0}>
-                    <LineChart data={points}>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
-                        <YAxis yAxisId='leftY' stroke="var(--color-text-3)" domain={[0, 'auto']} />
-                        <YAxis yAxisId='rightY' orientation='right' stroke="var(--color-text-3)" domain={[0, 'auto']}/>
-                        <Tooltip
-                            cursor={{stroke: 'var(--color-border-2)'}}
-                        />
-                        <Legend/>
-                        <Line 
-                        type='monotone'
-                        dataKey='reps'
-                        yAxisId="rightY"
-                        stroke="#f16363" 
-                        strokeWidth={5}
-                        dot={{
-                        r: 5, 
-                        fill: 'var(--color-surface-base)',
-                        }}
-                        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-                        />
-                        <Line 
-                        type='monotone'
-                        dataKey='weight'
-                        stroke="#6366f1" 
-                        strokeWidth={5}
-                        yAxisId="leftY"
-                        dot={{
-                        r: 5, 
-                        fill: 'var(--color-surface-base)',
-                        }}
-                        activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
+                <ExerciseLineChart points={lineChartPoints}/>
             </Card>
         </div>
     );

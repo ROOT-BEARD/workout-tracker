@@ -8,11 +8,10 @@ interface SetPopupProps{
 };
 
 export default function SetPopup({children,onAddSet}:SetPopupProps){
-    const [newSet, setSet] = useState<NewSet>({reps: 0, weight: 0,exercise:''});
+    const [newSet, setSet] = useState<NewSet>({reps:0,weight:0,exercise:'',workout_id:0,user_id:''});
     
     const handleSubmit = () => {
         onAddSet(newSet);
-        setSet({reps:0,weight:0})
     };
 
     return(
@@ -22,11 +21,11 @@ export default function SetPopup({children,onAddSet}:SetPopupProps){
             <Card className='Card'>
                 <TextField onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
                 <Label>WEIGHT</Label>
-                <Input type="number" inputMode="numeric" value={newSet.weight}/>
+                <Input placeholder="enter weight..." type="number" inputMode="numeric"/>
                 </TextField>
                 <TextField onChange={(val)=> setSet((prev)=>({...prev,reps:Number(val)}))} >
                 <Label>REPS</Label>
-                <Input type="number" inputMode="numeric" value={newSet.reps}/>
+                <Input placeholder="enter reps..." type="number" inputMode="numeric"/>
                 </TextField>
                 <Button onClick={handleSubmit}>Submit</Button>
             </Card>
