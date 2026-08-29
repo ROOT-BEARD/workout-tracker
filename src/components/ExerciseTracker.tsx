@@ -60,14 +60,14 @@ export default function ExerciseTracker({
         <CollaspableCard title={exercise.name}>
             {exercise.sets.length > 0 
             ?exercise.sets.map((set,setIndex)=>
-                <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,setIndex,newSet)}>
-                    <SetCard 
-                    setIndex={setIndex}
-                    exerciseIndex={exerciseIndex}
-                    onEditSet={onEditSet}
-                    onRemoveSet={onRemoveSet}
-                    set={set}/>
-                </SetPopup>
+                <div className="flex flex-row">
+                    <Button style={{height:'85px'}} variant="danger" onClick={()=>onRemoveSet(exerciseIndex,setIndex)}>X</Button>
+                    <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,setIndex,newSet)}>
+                        <SetCard 
+                        setIndex={setIndex}
+                        set={set}/>
+                    </SetPopup>
+                </div>
             ):
             <></>}
             <div className="flex justify-between">

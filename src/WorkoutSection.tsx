@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Calendar, Card } from '@heroui/react'
 
 export default function WorkoutSection(){

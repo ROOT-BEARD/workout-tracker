@@ -18,6 +18,7 @@ export default function DashBoard(){
     const [selectedExercise, setExercise] = useState<string>("");
     const [oneRepMaxGuess, setOneRepMaxGuess] = useState<number>(0);
     const [movements, setMovements] = useState<NewMovement[]>([]);
+    const [useRange, setUseRange] = useState<boolean>(false);
     const {user} = useUser();
 
     
@@ -26,7 +27,7 @@ export default function DashBoard(){
         getPoints();
     };
 
-    const getJustDate = (date:string):string => {const parts:string[] = date.split('T'); return parts[0]};
+    //const getJustDate = (date:string):string => {const parts:string[] = date.split('T'); return parts[0]};
 
     const getPoints = async() =>{
         if(!user?.id) return;
@@ -34,17 +35,19 @@ export default function DashBoard(){
         const {data: pointData ,error: pointError} = showMaxWeight? await supabase.rpc
         ("exercise_max_name_date",
             {   exercise_name: selectedExercise,
-                low:minRep,
-                high:maxRep,
+                low: useRange ? minRep : 0,
+                high: useRange ? maxRep : 1000,
                 userid:user.id
             }) :  await supabase.rpc
         ("get_workoutsets_for_exercise",
             {   exercise_name: selectedExercise,
-                low:minRep, 
-                high:maxRep,
+                low: useRange ? minRep : 0,
+                high: useRange ? maxRep : 1000,
                 userid:user.id
             });
         
+        if(pointError) console.error(pointError.message);
+
         const setCount:Record<string,number> = {};
 
         const points:LineChartPoint[] = (pointData || []).map((item:any)=>{
@@ -87,15 +90,15 @@ export default function DashBoard(){
     useEffect(()=>{
         getPoints();
         getMovements();
-    },[maxRep, minRep, showMaxWeight]);
+    },[maxRep, minRep, showMaxWeight, useRange]);
 
 
     return(
         <div>
-            <Card variant='secondary'>
+            <Card variant='secondary' className="h-1/2">
                 <MuscleRadarChart/>
             </Card>
-            <Card className="GraphCard" variant="secondary">
+            <Card className="flex h-1/2" variant="secondary">
                 <div style={{display:'flex', justifyContent:"space-between"}}>
                 <ExerciseComboBox 
                     selectedExercise={selectedExercise}
@@ -111,11 +114,19 @@ export default function DashBoard(){
                         </Switch.Content>
                     </Switch>
                     <div style={{display:'flex', flexDirection:"column"}}>
-                        MIN<Input value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
-                        MAX<Input value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
+                        <Switch isSelected={useRange} onChange={setUseRange}>
+                            <Switch.Content>
+                                <Switch.Control>
+                                <Switch.Thumb />
+                                </Switch.Control>
+                                Use Range
+                            </Switch.Content>
+                        </Switch>
+                        MIN<Input disabled={!useRange} value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
+                        MAX<Input disabled={!useRange} value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
                     </div>
                 </div>
-                <h1>EXERCISE: {selectedExercise}</h1>
+                {selectedExercise?<h1>EXERCISE: {selectedExercise}</h1>:<h1>EXERCISE: please pick exercise</h1>}
                 <h1>MAX WEIGHT: {max}lb</h1>
                 <h1>ONE REP MAX GUESS: {Math.round(oneRepMaxGuess)}lb</h1>
                 <ExerciseLineChart points={lineChartPoints}/>

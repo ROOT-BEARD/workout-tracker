@@ -4,7 +4,7 @@ import type { CalendarDate } from "@internationalized/date";;
 export default function WorkoutCalender({pickedDate, setDate, workoutDates} : {setDate:(date: CalendarDate)=>void, pickedDate:CalendarDate, workoutDates:string[]}){
     return(
         <div>
-            <Calendar onChange={(setDate)} value={pickedDate} style={{justifySelf:"center", minWidth:'15%'}}>
+            <Calendar  className="w-full" onChange={(setDate)} value={pickedDate} style={{justifySelf:"center", minWidth:'15%'}}>
                 <Calendar.Header>
                 <Calendar.Heading/>
                 <Calendar.NavButton slot='previous'/>   

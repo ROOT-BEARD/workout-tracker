@@ -1,5 +1,4 @@
 import WorkoutCalender from "../components/WorkoutCalender";
-import "./WorkoutPage.css";
 import { useEffect, useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 import ExerciseTracker from "../components/ExerciseTracker";
@@ -11,7 +10,7 @@ import { useUser } from "../contexts/UserContext";
 import { movementService } from "../services/movementService";
 
 export default function WorkoutPage(){
-    const { user, isLoading } = useUser();
+    const { user } = useUser();
     const [pickedDate, setDate] = useState<CalendarDate>(today(getLocalTimeZone()));
     const [addedExercises, setAddedExercises] = useState<Exercise[]>([]);
     const [workoutDates, setWorkoutDates] = useState<string[]>([]);
@@ -141,22 +140,27 @@ export default function WorkoutPage(){
     }, [user?.id]);
 
     return(
-        <div>
-            <div className="CalenderContainer">
-                <WorkoutCalender workoutDates={workoutDates} setDate={(date)=>handleNewDate(date)} pickedDate={pickedDate}/>
+        <div className="justify-center">
+            <div className="flex flex-col md:flex-row items-start gap-6 w-full">
+                <div className="w-1/2 shrink-0">
+                    <WorkoutCalender
+                    workoutDates={workoutDates}
+                    setDate={(date)=>handleNewDate(date)}
+                    pickedDate={pickedDate}/>
+                    <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
+                </div>
+                <Card variant="tertiary" className="ExerciseTrackerCard w-1/2 flex-1">
+                    <ExerciseTracker
+                    onEditSet={handleEditSet}
+                    onRemoveSet={handleRemoveSet}
+                    availableExercises={movements.map(movement=>movement.name)}
+                    addedExercises={addedExercises}
+                    onAddExercise={handleAddExercise}
+                    onRemoveExercise={handleRemoveExercise}
+                    onAddset={handleAddSet}
+                    />
+                </Card>
             </div>
-            <Card variant="tertiary" className="ExerciseTrackerCard">
-                <ExerciseTracker
-                onEditSet={handleEditSet}
-                onRemoveSet={handleRemoveSet}
-                availableExercises={movements.map(movement=>movement.name)}
-                addedExercises={addedExercises}
-                onAddExercise={handleAddExercise}
-                onRemoveExercise={handleRemoveExercise}
-                onAddset={handleAddSet}
-                />
-            </Card>
-            <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
         </div>
     );
 }

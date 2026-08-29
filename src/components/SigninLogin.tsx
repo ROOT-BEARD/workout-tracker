@@ -1,7 +1,6 @@
 import { Card, TextField, Input, Button, Label } from "@heroui/react";
 import type { NewAccount } from "../types/database";
 import { useState, type Dispatch, type SetStateAction } from "react";
-import { Link } from "react-router-dom";
 
 interface SigninLoginProps{
     setSignInInfo:Dispatch<SetStateAction<NewAccount>>,

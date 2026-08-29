@@ -41,8 +41,8 @@ export default function MuscleRadarChart(){
     },[user?.id, week]);
     
     return(
-        <div style={{width:'100%', height:'750px', paddingBottom:'100px'}}>
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[1000px] w-full pb-[100px] flex flex-col items-center justify-between">
+            {radarPoints.length > 0?( <ResponsiveContainer width="100%" height="100%">
                 <RadarChart 
                 data={radarPoints}> 
                     <PolarGrid/>
@@ -54,11 +54,18 @@ export default function MuscleRadarChart(){
                         fill="rgb(1, 255, 255)"
                         fillOpacity={0.5}/>
                 </RadarChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer>)
+            :(
+                <div className="flex h-full items-center">
+                    <h1 className="text-xl font-semibold text-center justify-center"> NO WORKOUT DATA FOR THIS WEEK</h1>
+                </div>
+            )}
+            <div>
             <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
             <div style={{justifySelf:'center'}}>
                 <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
                 <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
+            </div>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { Button, Card } from "@heroui/react";
+import { Card } from "@heroui/react";
 import type React from "react";
 import { useState } from "react";
 import './CollaspableCard.css';

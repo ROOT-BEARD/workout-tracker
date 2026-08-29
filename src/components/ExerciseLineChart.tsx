@@ -7,7 +7,7 @@ interface LineChartProps {
 
 export default function ExerciseLineChart({points}:LineChartProps){
     return(
-        <ResponsiveContainer width="100%" height={400} minWidth={0}>
+        <ResponsiveContainer width="100%" height="100%" minHeight='600px'>
             <LineChart data={points}>
                 <CartesianGrid strokeDasharray="3 3"/>
                 <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
