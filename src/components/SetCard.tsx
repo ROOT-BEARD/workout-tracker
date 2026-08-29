@@ -1,4 +1,4 @@
-import { Card, Button } from "@heroui/react";
+import { Card } from "@heroui/react";
 import type { NewSet } from "../types/database";
 
 interface setCardProps {

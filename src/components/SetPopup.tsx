@@ -5,18 +5,20 @@ import type { NewSet } from "../types/database";
 interface SetPopupProps{
     children: React.ReactNode;
     onAddSet: (newSet: NewSet) => void;
+    handleRemove: () => void;
 };
 
-export default function SetPopup({children,onAddSet}:SetPopupProps){
+export default function SetPopup({children,onAddSet,handleRemove}:SetPopupProps){
     const [newSet, setSet] = useState<NewSet>({reps:0,weight:0,exercise:'',workout_id:0,user_id:''});
-    
+    const [open, setOpen] = useState<boolean>(false);
+
     const handleSubmit = () => {
         onAddSet(newSet);
     };
 
     return(
-        <Popover>
-            <Popover.Trigger>{children}</Popover.Trigger>
+        <Popover isOpen={open} onOpenChange={(open)=> setOpen(open)}>
+            <Popover.Trigger onClick={()=>setOpen(true)}>{children}</Popover.Trigger>
             <Popover.Content>
             <Card className='Card'>
                 <TextField onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
@@ -27,7 +29,10 @@ export default function SetPopup({children,onAddSet}:SetPopupProps){
                 <Label>REPS</Label>
                 <Input placeholder="enter reps..." type="number" inputMode="numeric"/>
                 </TextField>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <div className="flex justify-between">
+                    <Button variant='danger' onClick={()=>{handleRemove(),setOpen(false)}}>X</Button>
+                    <Button onClick={()=>{handleSubmit(),setOpen(false)}}>Submit</Button>
+                </div>
             </Card>
             </Popover.Content>
         </Popover>

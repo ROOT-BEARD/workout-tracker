@@ -149,7 +149,7 @@ export default function WorkoutPage(){
                     pickedDate={pickedDate}/>
                     <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
                 </div>
-                <Card variant="tertiary" className="ExerciseTrackerCard w-1/2 flex-1">
+                <Card variant="tertiary" className="w-lvh h-lvh overflow-y-auto">
                     <ExerciseTracker
                     onEditSet={handleEditSet}
                     onRemoveSet={handleRemoveSet}

@@ -98,7 +98,7 @@ export default function DashBoard(){
             <Card variant='secondary' className="h-1/2">
                 <MuscleRadarChart/>
             </Card>
-            <Card className="flex h-1/2" variant="secondary">
+            <Card className="flex h-svh" variant="secondary">
                 <div style={{display:'flex', justifyContent:"space-between"}}>
                 <ExerciseComboBox 
                     selectedExercise={selectedExercise}

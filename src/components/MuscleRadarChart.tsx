@@ -41,7 +41,7 @@ export default function MuscleRadarChart(){
     },[user?.id, week]);
     
     return(
-        <div className="h-[1000px] w-full pb-[100px] flex flex-col items-center justify-between">
+        <div className="h-[80svh] w-full flex flex-col items-center justify-between">
             {radarPoints.length > 0?( <ResponsiveContainer width="100%" height="100%">
                 <RadarChart 
                 data={radarPoints}> 
@@ -62,7 +62,7 @@ export default function MuscleRadarChart(){
             )}
             <div>
             <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
-            <div style={{justifySelf:'center'}}>
+            <div style={{display:'flex', justifySelf:'center'}}>
                 <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
                 <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
             </div>

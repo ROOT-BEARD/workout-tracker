@@ -61,11 +61,13 @@ export default function ExerciseTracker({
             {exercise.sets.length > 0 
             ?exercise.sets.map((set,setIndex)=>
                 <div className="flex flex-row">
-                    <Button style={{height:'85px'}} variant="danger" onClick={()=>onRemoveSet(exerciseIndex,setIndex)}>X</Button>
-                    <SetPopup onAddSet={(newSet)=>onEditSet(exerciseIndex,setIndex,newSet)}>
+                    <SetPopup
+                    onAddSet={(newSet)=>onEditSet(exerciseIndex,setIndex,newSet)}
+                    handleRemove={()=>onRemoveSet(exerciseIndex,setIndex)}>
                         <SetCard 
-                        setIndex={setIndex}
-                        set={set}/>
+                            setIndex={setIndex}
+                            set={set}
+                        />
                     </SetPopup>
                 </div>
             ):
