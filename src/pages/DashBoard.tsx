@@ -14,7 +14,7 @@ export default function DashBoard(){
     const [max, setMax] = useState<number>(0);
     const [maxRep, setMaxRep] = useState<number>(10);
     const [minRep, setMinRep] =useState<number>(0);
-    const [showMaxWeight, setShowMaxWeight] = useState<boolean>(true);
+    const [showMaxWeight, setShowMaxWeight] = useState<boolean>(false);
     const [selectedExercise, setExercise] = useState<string>("");
     const [oneRepMaxGuess, setOneRepMaxGuess] = useState<number>(0);
     const [movements, setMovements] = useState<NewMovement[]>([]);
@@ -94,10 +94,15 @@ export default function DashBoard(){
 
 
     return(
-        <div>
-            <Card variant='secondary' className="h-1/2">
-                <MuscleRadarChart/>
-            </Card>
+        <div className="flex flex-col w-full h-full px-8 pt-8 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Card variant='secondary' className="aspect-square">
+                    <MuscleRadarChart/>
+                </Card>
+                <Card variant='secondary' className="aspect-square justify-center items-center">
+                    PLACEHOLDER
+                </Card>
+            </div>
             <Card className="flex h-svh" variant="secondary">
                 <div style={{display:'flex', justifyContent:"space-between"}}>
                 <ExerciseComboBox 
@@ -110,10 +115,10 @@ export default function DashBoard(){
                             <Switch.Control>
                             <Switch.Thumb />
                             </Switch.Control>
-                            Only show max weight sets
+                            Use Max Sets
                         </Switch.Content>
                     </Switch>
-                    <div style={{display:'flex', flexDirection:"column"}}>
+                    <div className="flex flex-col">
                         <Switch isSelected={useRange} onChange={setUseRange}>
                             <Switch.Content>
                                 <Switch.Control>
@@ -122,8 +127,8 @@ export default function DashBoard(){
                                 Use Range
                             </Switch.Content>
                         </Switch>
-                        MIN<Input disabled={!useRange} value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
-                        MAX<Input disabled={!useRange} value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
+                        MIN<Input className='w-25' disabled={!useRange} value={minRep} onChange={(e) => setMinRep(Number(e.target.value))}></Input>
+                        MAX<Input className='w-25' disabled={!useRange} value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
                     </div>
                 </div>
                 {selectedExercise?<h1>EXERCISE: {selectedExercise}</h1>:<h1>EXERCISE: please pick exercise</h1>}

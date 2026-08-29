@@ -140,16 +140,18 @@ export default function WorkoutPage(){
     }, [user?.id]);
 
     return(
-        <div className="justify-center">
-            <div className="flex flex-col md:flex-row items-start gap-6 w-full">
-                <div className="w-1/2 shrink-0">
-                    <WorkoutCalender
-                    workoutDates={workoutDates}
-                    setDate={(date)=>handleNewDate(date)}
-                    pickedDate={pickedDate}/>
-                    <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
+        <div>
+            <div className="md:h-screen h-full flex flex-col md:flex-row gap-6 justify-between">
+                <div className="flex flex-col h-full w-full md:w-1/2 items-center justify-center">
+                    <div className="md:scale-200">
+                        <WorkoutCalender
+                        workoutDates={workoutDates}
+                        setDate={(date)=>handleNewDate(date)}
+                        pickedDate={pickedDate}/>
+                        <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
+                    </div>
                 </div>
-                <Card variant="tertiary" className="w-lvh h-lvh overflow-y-auto">
+                <Card variant="tertiary" className="h-auto md:h-full w-full md:w-1/2 items-center overflow-y-hidden md:overflow-y-auto overflow-x-hidden">
                     <ExerciseTracker
                     onEditSet={handleEditSet}
                     onRemoveSet={handleRemoveSet}

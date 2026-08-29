@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function MenuDrawer(){
     return(
         <Drawer>
-            <Button>|||</Button>
+            <Button className='absolute'>|||</Button>
             <Drawer.Backdrop>
                 <Drawer.Content placement="left">
                     <Drawer.Dialog>
