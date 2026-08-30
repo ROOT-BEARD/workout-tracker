@@ -30,15 +30,17 @@ export default function AccountPage(){
     };
 
     return(
-       !user?<SigninLogin
-            setSignInInfo={setSignInInfo}
-            signInInfo={signInInfo}
-            handleSignUp={handleSignUp}
-            handleSignIn={handleSignIn}
-       />:
-       <div style={{justifySelf:'center'}}>
-        <h1>HELLO {user.user_metadata.username}</h1>
-        <Button onClick={handleSignOut}>Sign Out</Button>
-       </div>
+        <div className="flex h-screen items-center justify-center">
+            {!user?<SigninLogin
+                    setSignInInfo={setSignInInfo}
+                    signInInfo={signInInfo}
+                    handleSignUp={handleSignUp}
+                    handleSignIn={handleSignIn}
+            />:
+            <div>
+                <h1>HELLO {user.user_metadata.username}</h1>
+                <Button onClick={handleSignOut}>Sign Out</Button>
+            </div>}
+        </div>
     );
 }

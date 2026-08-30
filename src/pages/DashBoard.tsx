@@ -103,7 +103,7 @@ export default function DashBoard(){
                     PLACEHOLDER
                 </Card>
             </div>
-            <Card className="flex h-svh" variant="secondary">
+            <Card className="flex h-svh w-full" variant="secondary">
                 <div style={{display:'flex', justifyContent:"space-between"}}>
                 <ExerciseComboBox 
                     selectedExercise={selectedExercise}

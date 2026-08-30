@@ -13,7 +13,7 @@ export default function SigninLogin({setSignInInfo,signInInfo,handleSignUp,handl
     const[SignUp, setSignUp] = useState<boolean>(true);
 
     return(
-        <Card variant='secondary' style={{width:'500px', justifySelf:'center',}}>
+        <Card variant='secondary' style={{width:'500px', justifySelf:'center'}}>
             <Card.Title>{SignUp?'SIGN UP':'LOG IN'}</Card.Title>
             <form style={{display:'flex',flexDirection:'column'}}>
                 <TextField onChange={(val)=>

@@ -41,31 +41,33 @@ export default function MuscleRadarChart(){
     },[user?.id, week]);
     
     return(
-        <div className="h-[80svh] w-full flex flex-col items-center justify-between">
-            {radarPoints.length > 0?( <ResponsiveContainer width="100%" height="100%">
-                <RadarChart 
-                data={radarPoints}> 
-                    <PolarGrid/>
-                    <PolarAngleAxis dataKey='muscleGroup' />
-                    <PolarRadiusAxis/>
-                    <Tooltip/>
-                    <Radar
-                        dataKey='volume'
-                        fill="rgb(1, 255, 255)"
-                        fillOpacity={0.5}/>
-                </RadarChart>
-            </ResponsiveContainer>)
-            :(
-                <div className="flex h-full items-center">
-                    <h1 className="text-xl font-semibold text-center justify-center"> NO WORKOUT DATA FOR THIS WEEK</h1>
-                </div>
-            )}
-            <div>
-            <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
-            <div style={{display:'flex', justifySelf:'center'}}>
-                <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
-                <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
+        <div className="h-full w-full flex flex-col items-center justify-between">
+            <div className="h-full w-full flex items-center justify-between">
+                {radarPoints.length > 0?( <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart 
+                    data={radarPoints}> 
+                        <PolarGrid/>
+                        <PolarAngleAxis dataKey='muscleGroup' />
+                        <PolarRadiusAxis/>
+                        <Tooltip/>
+                        <Radar
+                            dataKey='volume'
+                            fill="rgb(1, 255, 255)"
+                            fillOpacity={0.5}/>
+                    </RadarChart>
+                </ResponsiveContainer>)
+                :(
+                    <div className="flex h-full w-full items-center justify-center">
+                        <h1 className="text-xl font-semibold"> NO WORKOUT DATA FOR THIS WEEK</h1>
+                    </div>
+                )}
             </div>
+            <div>
+                <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
+                <div style={{display:'flex', justifySelf:'center'}}>
+                    <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
+                    <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
+                </div>
             </div>
         </div>
     );

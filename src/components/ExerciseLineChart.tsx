@@ -7,7 +7,7 @@ interface LineChartProps {
 
 export default function ExerciseLineChart({points}:LineChartProps){
     return(
-        <div className="h-svh">
+        <div className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={points}>
                     <CartesianGrid strokeDasharray="3 3"/>
