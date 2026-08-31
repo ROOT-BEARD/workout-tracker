@@ -4,7 +4,7 @@ import type { NewSet, Exercise } from "../types/database";
 import SetPopup from "./SetPopup";
 import "./ExerciseTracker.css";
 import CollaspableCard from "./CollaspableCard";
-import ExerciseComboBox from "./ExerciseSelectPopup";
+import ExerciseComboBox from "./ExerciseComboBox";
 import SetCard from "./SetCard";
 
 interface ExerciseTrackerProps{

@@ -23,8 +23,9 @@ export interface Movement {
     id:number;
     created_at:string;
     name:string;
-    muscle_groups:string[];
+    muscle_groups?:string[];
     primary_muscle:string;
+    user_id:string;
 }
 
 export interface Account {

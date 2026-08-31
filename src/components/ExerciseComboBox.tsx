@@ -33,7 +33,7 @@ export default function ExerciseComboBox({
                         <ComboBox.InputGroup>
                             <Input placeholder="Search for exercise..."/>
                             <ComboBox.Trigger />
-                            </ComboBox.InputGroup>
+                        </ComboBox.InputGroup>
                         <ComboBox.Popover>
                             <ListBox style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                 {exerciseList}

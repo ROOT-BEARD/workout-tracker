@@ -1,13 +1,14 @@
 import { Card, Input, Switch } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase-client";
-import ExerciseComboBox from "../components/ExerciseSelectPopup";
+import ExerciseComboBox from "../components/ExerciseComboBox";
 import { useUser } from "../contexts/UserContext";
 import type { NewMovement } from "../types/database";
 import { movementService } from "../services/movementService";
 import MuscleRadarChart from "../components/MuscleRadarChart";
 import type { LineChartPoint } from "../types/charts";
 import ExerciseLineChart from "../components/ExerciseLineChart";
+import MovementAdder from "../components/MovementAdder";
 
 export default function DashBoard(){
     const [lineChartPoints, setLineChartPoints] = useState<LineChartPoint[]>([]);
@@ -94,18 +95,18 @@ export default function DashBoard(){
 
 
     return(
-        <div className="flex flex-col w-full h-full px-8 pt-8 gap-8">
+        <div className="flex flex-col w-full h-full px-6 pt-8 gap-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <Card variant='secondary' className="aspect-square">
                     <MuscleRadarChart/>
                 </Card>
-                <Card variant='secondary' className="aspect-square justify-center items-center">
-                    PLACEHOLDER
+                <Card variant='secondary' className="aspect-square">
+                    <MovementAdder userId={user? user.id : ''}/>
                 </Card>
             </div>
-            <Card className="flex h-svh w-full" variant="secondary">
-                <div style={{display:'flex', justifyContent:"space-between"}}>
-                <ExerciseComboBox 
+            <Card className="flex h-screen w-full" variant="secondary">
+                <div className="flex justify-between h-1/12">
+                    <ExerciseComboBox 
                     selectedExercise={selectedExercise}
                     setExercise={setExercise}
                     availableExercises={movements.map(movement=>movement.name)}
@@ -134,7 +135,9 @@ export default function DashBoard(){
                 {selectedExercise?<h1>EXERCISE: {selectedExercise}</h1>:<h1>EXERCISE: please pick exercise</h1>}
                 <h1>MAX WEIGHT: {max}lb</h1>
                 <h1>ONE REP MAX GUESS: {Math.round(oneRepMaxGuess)}lb</h1>
-                <ExerciseLineChart points={lineChartPoints}/>
+                <div className="h-full w-full">
+                    <ExerciseLineChart points={lineChartPoints}/>
+                </div>
             </Card>
         </div>
     );

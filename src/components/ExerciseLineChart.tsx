@@ -9,13 +9,34 @@ export default function ExerciseLineChart({points}:LineChartProps){
     return(
         <div className="h-full w-full">
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={points}>
+                <LineChart
+                data={points}
+                margin={{top:0,right:0,left:0,bottom:0}}
+                style={{ pointerEvents: "none" }}
+                >
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey='x' stroke="var(--color-text-3)" domain={['auto', 'auto']} />
-                    <YAxis yAxisId='leftY' stroke="var(--color-text-3)" domain={[0, 'auto']} />
-                    <YAxis yAxisId='rightY' orientation='right' stroke="var(--color-text-3)" domain={[0, 'auto']}/>
+                    <XAxis
+                    dataKey='x'
+                    stroke="var(--color-text-3)"
+                    domain={['auto', 'auto']}
+                    padding={{left:0,right:0}}
+                    />
+                    <YAxis
+                    yAxisId='leftY'
+                    stroke="var(--color-text-3)"
+                    domain={[0, 'auto']}
+                    width={25}
+                    />
+                    <YAxis
+                    yAxisId='rightY'
+                    orientation='right'
+                    stroke="var(--color-text-3)"
+                    domain={[0, 'auto']}
+                    width={25}
+                    />
                     <Tooltip
                         cursor={{stroke: 'var(--color-border-2)'}}
+                        wrapperStyle={{ pointerEvents: "none" }}
                     />
                     <Legend/>
                     <Line 
@@ -28,7 +49,10 @@ export default function ExerciseLineChart({points}:LineChartProps){
                     r: 5, 
                     fill: 'var(--color-surface-base)',
                     }}
-                    activeDot={{ r: 8, stroke: 'var(--color-surface-base)' }}
+                    activeDot={{
+                        r: 8,
+                        stroke: 'var(--color-surface-base)',
+                        style: { pointerEvents: "none"} }}
                     />
                     <Line 
                     type='monotone'

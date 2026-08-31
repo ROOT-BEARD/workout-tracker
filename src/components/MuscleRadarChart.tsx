@@ -58,7 +58,7 @@ export default function MuscleRadarChart(){
                 </ResponsiveContainer>)
                 :(
                     <div className="flex h-full w-full items-center justify-center">
-                        <h1 className="text-xl font-semibold"> NO WORKOUT DATA FOR THIS WEEK</h1>
+                        <h1 className="text-l font-semibold"> NO WORKOUT DATA FOR THIS WEEK</h1>
                     </div>
                 )}
             </div>
