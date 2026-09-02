@@ -6,6 +6,7 @@ import "./ExerciseTracker.css";
 import CollaspableCard from "./CollaspableCard";
 import ExerciseComboBox from "./ExerciseComboBox";
 import SetCard from "./SetCard";
+import { CirclePlus, TrashBin } from "@gravity-ui/icons";
 
 interface ExerciseTrackerProps{
     availableExercises: string[];
@@ -73,22 +74,20 @@ export default function ExerciseTracker({
             ):
             <></>}
             <div className="flex justify-between">
-                <Button variant="danger" onClick={()=>onRemoveExercise(exerciseIndex)}>Remove Exercise</Button>
-                <Button onClick={()=>onAddset(exerciseIndex,{...emptySet, exercise: exercise.name})}>Add Set</Button>
+                <Button variant="danger-soft" onDoubleClick={()=>onRemoveExercise(exerciseIndex)}><TrashBin/></Button>
+                <Button variant="outline" onClick={()=>onAddset(exerciseIndex,{...emptySet, exercise: exercise.name})}><CirclePlus/></Button>
             </div>
         </CollaspableCard>
     ));
 
     return(
-        <div style={{display:'flex', alignItems:'center', flexDirection:'column'}}>
-            <div>
-                {addedExercisesList}
-                <ExerciseComboBox 
-                selectedExercise={selectedExercise}
-                setExercise={setExercise}
-                availableExercises={availableExercises}
-                handleSubmit={handleAdd}/>
-            </div>
+        <div className="flex flex-col items-center gap-4">
+            {addedExercisesList}
+            <ExerciseComboBox 
+            selectedExercise={selectedExercise}
+            setExercise={setExercise}
+            availableExercises={availableExercises}
+            handleSubmit={handleAdd}/>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import { useUser } from "../contexts/UserContext";
 import { addDays, startOfWeek, subDays } from "date-fns";
 import { Button } from "@heroui/react";
 import type { radarPoint } from "../types/charts";
+import {Minus,Plus} from '@gravity-ui/icons';
 
 export default function MuscleRadarChart(){
     const {user} = useUser();
@@ -65,8 +66,8 @@ export default function MuscleRadarChart(){
             <div>
                 <h1 style={{justifySelf:'center'}}>DATES: {week.toDateString()}-{addDays(week, 7).toDateString()}</h1>
                 <div style={{display:'flex', justifySelf:'center'}}>
-                    <Button onClick={()=>setWeek(subDays(week, 7))}>-</Button>
-                    <Button onClick={()=>setWeek(addDays(week, 7))}>+</Button>
+                    <Button size='md'   onClick={()=>setWeek(subDays(week, 7))}><Minus/></Button>
+                    <Button size="md" onClick={()=>setWeek(addDays(week, 7))}><Plus/></Button>
                 </div>
             </div>
         </div>

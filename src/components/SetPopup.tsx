@@ -1,6 +1,7 @@
-import { Popover, TextField, Label, Input, Button, Card } from "@heroui/react";
+import { Popover, Button, Card, NumberField, Typography } from "@heroui/react";
 import { useState } from "react";
 import type { NewSet } from "../types/database";
+import {TrashBin, Check} from "@gravity-ui/icons"
 
 interface SetPopupProps{
     children: React.ReactNode;
@@ -19,19 +20,27 @@ export default function SetPopup({children,onAddSet,handleRemove}:SetPopupProps)
     return(
         <Popover isOpen={open} onOpenChange={(open)=> setOpen(open)}>
             <Popover.Trigger onClick={()=>setOpen(true)}>{children}</Popover.Trigger>
-            <Popover.Content>
+            <Popover.Content className='max-w-3/4'>
             <Card className='Card'>
-                <TextField onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
-                <Label>WEIGHT</Label>
-                <Input placeholder="enter weight..." type="number" inputMode="numeric"/>
-                </TextField>
-                <TextField onChange={(val)=> setSet((prev)=>({...prev,reps:Number(val)}))} >
-                <Label>REPS</Label>
-                <Input placeholder="enter reps..." type="number" inputMode="numeric"/>
-                </TextField>
+                <Typography type='h6'>REPS</Typography>
+                <NumberField minValue={0} defaultValue={0} onChange={(val)=> setSet((prev)=>({...prev,reps:Number(val)}))} >
+                    <NumberField.Group>
+                        <NumberField.DecrementButton/>
+                            <NumberField.Input/>
+                        <NumberField.IncrementButton/>
+                    </NumberField.Group>
+                </NumberField>
+                <Typography type='h6'>WEIGHT</Typography>
+                <NumberField minValue={0} defaultValue={0} onChange={(val)=> setSet((prev)=>({...prev,weight:Number(val)}))} >
+                    <NumberField.Group>
+                        <NumberField.DecrementButton/>
+                            <NumberField.Input/>
+                        <NumberField.IncrementButton/>
+                    </NumberField.Group>
+                </NumberField>
                 <div className="flex justify-between">
-                    <Button variant='danger' onClick={()=>{handleRemove(),setOpen(false)}}>X</Button>
-                    <Button onClick={()=>{handleSubmit(),setOpen(false)}}>Submit</Button>
+                    <Button variant='danger-soft' onClick={()=>{handleRemove(),setOpen(false)}}><TrashBin/></Button>
+                    <Button onClick={()=>{handleSubmit(),setOpen(false)}}><Check/></Button>
                 </div>
             </Card>
             </Popover.Content>

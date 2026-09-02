@@ -1,5 +1,6 @@
 import { Button, Card, ComboBox, FieldError, Input, ListBox, ListBoxItem, ListBoxItemIndicator, Popover } from "@heroui/react";
 import { useState } from "react";
+import { Plus, CirclePlus } from "@gravity-ui/icons";
 
 interface ExerciseComboBoxProps{
     selectedExercise:string,
@@ -25,7 +26,11 @@ export default function ExerciseComboBox({
 
     return(
         <Popover isOpen={popoverOpen} onOpenChange={setPopoverOpen}>
-            <Popover.Trigger><Button>PICK EXERCISE</Button></Popover.Trigger>
+            <Popover.Trigger>
+                <Button variant="ghost" size="lg">
+                    <Plus/>
+                </Button>
+            </Popover.Trigger>
             <Popover.Content placement="bottom">
                 <Card>
                     <ComboBox inputValue={selectedExercise}
@@ -41,9 +46,14 @@ export default function ExerciseComboBox({
                         </ComboBox.Popover>
                         <FieldError/>
                     </ComboBox>
-                    <Button onClick={() =>{
+                    <Button
+                        className='w-full'
+                        variant='outline'
+                        onClick={() =>{
                         handleSubmit(),
-                        setPopoverOpen(false)}}>ADD EXERCISE
+                        setPopoverOpen(false)}}
+                    >
+                        <CirclePlus/>
                     </Button>
                 </Card>
             </Popover.Content>

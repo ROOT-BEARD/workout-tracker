@@ -132,7 +132,9 @@ export default function DashBoard(){
                         MAX<Input className='w-25' disabled={!useRange} value={maxRep} onChange={(e) => setMaxRep(Number(e.target.value))}></Input>
                     </div>
                 </div>
-                {selectedExercise?<h1>EXERCISE: {selectedExercise}</h1>:<h1>EXERCISE: please pick exercise</h1>}
+                <div className='w-1/2'>
+                    {selectedExercise?<h1>{selectedExercise}</h1>:<h1>please pick exercise</h1>}
+                </div>
                 <h1>MAX WEIGHT: {max}lb</h1>
                 <h1>ONE REP MAX GUESS: {Math.round(oneRepMaxGuess)}lb</h1>
                 <div className="h-full w-full">

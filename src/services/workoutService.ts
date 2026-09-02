@@ -13,6 +13,16 @@ export const workoutService = {
         if(error) console.error("Error getting workouts", error.message);
         return data??[];
     },
+    async deleteWorkout(workout_id:number){
+        await setService.resetSetsByWorkoutId(workout_id);
+
+        const{error:deleteError} = await supabase
+        .from('workouts')
+        .delete()
+        .eq('id', workout_id);
+
+        if(deleteError) console.error("error deleting workout: ", deleteError.message);
+    },
     async getWorkoutByDate(date:CalendarDate,user_id:string): Promise<Workout>{
         const{data, error} = await supabase
         .from("workouts")

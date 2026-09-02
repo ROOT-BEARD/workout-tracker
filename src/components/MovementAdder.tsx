@@ -82,7 +82,7 @@ export default function MovementAdder({userId}:{userId:string}){
                         </ListBox>
                     </ComboBox.Popover>
                 </ComboBox>
-                <Button onClick={handleAdd}>ADD EXERCISE</Button>
+                <Button onClick={handleAdd}>SUBMIT</Button>
             </Card>
             <Card className="w-1/2">
                 <Typography type='h3'>Added Movements</Typography>
@@ -91,8 +91,8 @@ export default function MovementAdder({userId}:{userId:string}){
                     <Popover>
                         <Popover.Trigger><Card>{movement.name}</Card></Popover.Trigger>
                         <Popover.Content>
-                            <Card>
-                                <Button variant='danger' onClick={()=>handleDelete(movement.name)}>DELETE</Button>
+                            <Card className="flex-row">
+                                <Button variant='danger-soft' onDoubleClick={()=>handleDelete(movement.name)}>DELETE</Button>
                             </Card>
                         </Popover.Content>
                     </Popover>)}

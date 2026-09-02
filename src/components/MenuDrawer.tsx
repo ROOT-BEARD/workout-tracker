@@ -1,10 +1,11 @@
 import { Button, Drawer } from "@heroui/react";
 import { Link } from "react-router-dom";
+import { Bars } from "@gravity-ui/icons";
 
 export default function MenuDrawer(){
     return(
         <Drawer>
-            <Button className='absolute'>|||</Button>
+            <Button variant='ghost' className='absolute'><Bars/></Button>
             <Drawer.Backdrop>
                 <Drawer.Content placement="left">
                     <Drawer.Dialog>

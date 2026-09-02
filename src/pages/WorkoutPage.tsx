@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { today, getLocalTimeZone, CalendarDate } from "@internationalized/date";
 import ExerciseTracker from "../components/ExerciseTracker";
 import type { NewSet, Exercise, Workout, NewMovement } from "../types/database";
-import { Button, Card } from "@heroui/react";
+import { Button, Card, toast  } from "@heroui/react";
 import { workoutService } from "../services/workoutService";
 import { setService } from "../services/setService";
 import { useUser } from "../contexts/UserContext";              
 import { movementService } from "../services/movementService";
+import { FloppyDisk, TrashBin } from "@gravity-ui/icons";
 
 export default function WorkoutPage(){
     const { user } = useUser();
@@ -122,15 +123,34 @@ export default function WorkoutPage(){
             console.log("can't");
             return;
         }
+
         const newWorkoutData = {
             created_at: pickedDate.toString(), // e.g., "2026-08-13"
             user_id:user.id
         };
-        if(!await workoutService.getWorkoutByDate(pickedDate,user.id)){
-            await workoutService.createWorkout(newWorkoutData,addedExercises);
-        } else{
-            await workoutService.updateWorkout(newWorkoutData, addedExercises, pickedDate);
+
+        try{
+            if(!await workoutService.getWorkoutByDate(pickedDate,user.id)){
+                await workoutService.createWorkout(newWorkoutData,addedExercises);
+            } else{
+                await workoutService.updateWorkout(newWorkoutData, addedExercises, pickedDate);
+            }
+
+            toast.success("Your Workout Was Saved!", {timeout:2000});
+
+            getWorkoutDates();
+        } catch (error) {
+            console.error("faild to save workout: ", error);
         }
+    };
+
+    const handeDelete = async () => {
+        if(!user?.id) return;
+
+        const pickedWorkout = await workoutService.getWorkoutByDate(pickedDate, user.id);
+        await workoutService.deleteWorkout(pickedWorkout.id);
+        setAddedExercises([]);
+        getWorkoutDates();
     };
 
     useEffect(()=> {
@@ -147,9 +167,12 @@ export default function WorkoutPage(){
                     workoutDates={workoutDates}
                     setDate={(date)=>handleNewDate(date)}
                     pickedDate={pickedDate}/>
-                    <Button onClick={handleSubmit}>SAVE TO DATABASE</Button>
+                    <div className="flex flex-row pt-10 gap-32">
+                        <Button size='lg' variant="danger-soft" onDoubleClick={handeDelete}><TrashBin/></Button>
+                        <Button size='lg' variant='outline' onClick={handleSubmit}><FloppyDisk/></Button>
+                    </div>
                 </div>
-                <Card variant="tertiary" className="h-auto md:h-full w-full md:w-1/2 items-center overflow-y-hidden md:overflow-y-auto overflow-x-hidden">
+                <Card variant='secondary' className="h-full w-full md:w-1/2 items-center overflow-y-hidden md:overflow-y-auto overflow-x-hidden">
                     <ExerciseTracker
                     onEditSet={handleEditSet}
                     onRemoveSet={handleRemoveSet}

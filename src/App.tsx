@@ -11,11 +11,11 @@ export default function App() {
   return(
     <BrowserRouter>
       <MenuDrawer/>
-      <Routes>
-          <Route path='/' element={<DashBoard/>}/>
-          <Route path='/WorkoutPage' element={<WorkoutPage/>}/>
-          <Route path='/AccountPage' element={<AccountPage/>}/>
-      </Routes>
+          <Routes>
+              <Route path='/' element={<DashBoard/>}/>
+              <Route path='/WorkoutPage' element={<WorkoutPage/>}/>
+              <Route path='/AccountPage' element={<AccountPage/>}/>
+          </Routes>
     </BrowserRouter>
   );
 }
