@@ -17,12 +17,10 @@ export default function ExerciseComboBox({
 }:ExerciseComboBoxProps){
     const [popoverOpen,setPopoverOpen] = useState<boolean>(false);
 
-    const exerciseList = availableExercises.map(exercise => 
-    <ListBoxItem id={exercise.toLowerCase()} textValue={exercise}>
-        {exercise}
-        <ListBoxItemIndicator />
-    </ListBoxItem>
-    );
+    const exerciseList = availableExercises.map((exercise, index) => ({
+        id: `${exercise.toLowerCase()}-${index}`,
+        exercise
+    }));
 
     return(
         <Popover isOpen={popoverOpen} onOpenChange={setPopoverOpen}>
@@ -40,8 +38,15 @@ export default function ExerciseComboBox({
                             <ComboBox.Trigger />
                         </ComboBox.InputGroup>
                         <ComboBox.Popover>
-                            <ListBox style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                                {exerciseList}
+                            <ListBox
+                            items={exerciseList}
+                            style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                {(item) => (
+                                    <ListBoxItem key={item.id} id={item.id} textValue={item.exercise}>
+                                        {item.exercise}
+                                        <ListBoxItemIndicator />
+                                    </ListBoxItem>
+                                )}
                             </ListBox>
                         </ComboBox.Popover>
                         <FieldError/>
