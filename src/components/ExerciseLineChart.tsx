@@ -12,7 +12,6 @@ export default function ExerciseLineChart({points}:LineChartProps){
                 <LineChart
                 data={points}
                 margin={{top:0,right:0,left:0,bottom:0}}
-                style={{ pointerEvents: "none" }}
                 >
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis
@@ -20,19 +19,22 @@ export default function ExerciseLineChart({points}:LineChartProps){
                     stroke="var(--color-text-3)"
                     domain={['auto', 'auto']}
                     padding={{left:0,right:0}}
+                    interval="preserveStartEnd"
                     />
                     <YAxis
                     yAxisId='leftY'
                     stroke="var(--color-text-3)"
                     domain={[0, 'auto']}
-                    width={25}
+                    width={40}
+                    padding={{top:30}}
                     />
                     <YAxis
                     yAxisId='rightY'
                     orientation='right'
                     stroke="var(--color-text-3)"
                     domain={[0, 'auto']}
-                    width={25}
+                    width={40}
+                    padding={{top:30}}
                     />
                     <Tooltip
                         cursor={{stroke: 'var(--color-border-2)'}}
